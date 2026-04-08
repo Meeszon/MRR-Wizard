@@ -119,7 +119,7 @@ export default function App() {
   }
 
   return (
-    <div className="w-[640px] h-[360px] overflow-hidden relative font-sans">
+    <div className="w-full h-full overflow-hidden relative font-sans bg-bg-secondary">
       {screen === 'home' && (
         <HomeScreen onNewMission={startNewMission} onMyMissions={() => setScreen('mission-list')} missionCount={missions.length} />
       )}

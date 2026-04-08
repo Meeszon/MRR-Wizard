@@ -77,7 +77,7 @@ return (
 
       {/* Scrollable content */}
       <div className="flex-1 overflow-y-auto min-h-0 px-4 pt-3 pb-2">
-        <div className="bg-bg-primary rounded-card border border-border overflow-hidden">
+        <div className="bg-bg-primary rounded-card border border-border overflow-hidden max-w-[600px] mx-auto w-full">
           {/* Quality — drill-down */}
           <button
             className="w-full flex items-center gap-3 px-4 hover:bg-bg-secondary transition-colors"
@@ -241,7 +241,7 @@ return (
       <div className="flex-shrink-0 px-8 pt-2 pb-3">
         <button
           onClick={onNext}
-          className="w-full py-3 rounded-btn bg-primary flex items-center justify-center gap-2 shadow active:scale-[0.98] transition-transform"
+          className="w-full max-w-[560px] mx-auto py-3 rounded-btn bg-primary flex items-center justify-center gap-2 shadow active:scale-[0.98] transition-transform"
         >
           <Check size={18} color="white" strokeWidth={3} />
           <span className="text-h3 text-white font-bold">Bevestig Instellingen</span>
@@ -254,7 +254,7 @@ return (
         (() => {
           const m = calcMetrics(wizard.quality);
           return (
-            <div className="absolute inset-0 bg-bg-secondary flex flex-col z-10">
+            <div className="absolute inset-0 bg-bg-secondary flex flex-col z-10 overflow-hidden">
               {/* Section 1 — Header (matches WizardBar) */}
               <div className="relative flex items-center bg-white border-b border-border px-4 py-3 flex-shrink-0">
                 <button
@@ -326,15 +326,14 @@ return (
                 )}
               </div>
 
+              {/* Scrollable body */}
+              <div className="flex-1 overflow-y-auto min-h-0">
+
+              <div className="max-w-[560px] mx-auto w-full">
+
               {/* Section 2 — Metrics Dashboard */}
-              <div
-                className="flex gap-2 px-4 flex-shrink-0"
-                style={{ paddingTop: 16, paddingBottom: 16 }}
-              >
-                <div
-                  className="flex-1 bg-white rounded-card border border-border flex flex-col items-center justify-center gap-1"
-                  style={{ height: 88 }}
-                >
+              <div className="grid grid-cols-2 gap-2 px-4 py-4 min-[480px]:grid-cols-4">
+                <div className="bg-white rounded-card border border-border flex flex-col items-center justify-center gap-1 py-4">
                   <Clock size={16} color="#3D5AF2" />
                   <span
                     className="font-bold text-title"
@@ -345,10 +344,7 @@ return (
                   <span style={{ fontSize: 10, color: "#5A5A5A" }}>min</span>
                 </div>
 
-                <div
-                  className="flex-1 bg-white rounded-card border border-border flex flex-col items-center justify-center gap-1"
-                  style={{ height: 88 }}
-                >
+                <div className="bg-white rounded-card border border-border flex flex-col items-center justify-center gap-1 py-4">
                   <ArrowRight
                     size={16}
                     color="#3D5AF2"
@@ -365,10 +361,7 @@ return (
                   </span>
                 </div>
 
-                <div
-                  className="flex-1 bg-white rounded-card border border-border flex flex-col items-center justify-center gap-1"
-                  style={{ height: 88 }}
-                >
+                <div className="bg-white rounded-card border border-border flex flex-col items-center justify-center gap-1 py-4">
                   <Camera size={16} color="#3D5AF2" />
                   <span
                     className="font-bold text-title"
@@ -379,10 +372,7 @@ return (
                   <span style={{ fontSize: 10, color: "#5A5A5A" }}>foto's</span>
                 </div>
 
-                <div
-                  className="flex-1 bg-white rounded-card border border-border flex flex-col items-center justify-center gap-1"
-                  style={{ height: 88 }}
-                >
+                <div className="bg-white rounded-card border border-border flex flex-col items-center justify-center gap-1 py-4">
                   <Battery
                     size={16}
                     color={m.feasible ? "#3D5AF2" : "#E0515F"}
@@ -437,6 +427,10 @@ return (
                   </span>
                 )}
               </div>
+
+              </div>{/* end max-w wrapper */}
+
+              </div>{/* end scrollable body */}
             </div>
           );
         })()}

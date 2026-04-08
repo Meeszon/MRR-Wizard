@@ -32,7 +32,7 @@ export default function Step4_Ready({ missionName, isEdit, onStart, onHome }: St
       </div>
 
       {/* Buttons — side by side */}
-      <div className="w-full flex gap-2">
+      <div className="w-full max-w-[560px] mx-auto flex gap-2">
         <button
           onClick={onHome}
           className="flex-1 flex items-center justify-center gap-1.5 rounded-btn border border-border bg-white active:scale-[0.98] transition-transform"

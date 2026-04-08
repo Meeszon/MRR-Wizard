@@ -78,7 +78,7 @@ export default function Step2_Area({
 
         <div className="absolute bottom-3 left-6 right-6">
           {!isClosed ? (
-            <div className="w-full py-3 px-4 rounded-btn border-2 border-dashed border-body/25 bg-white/80 flex items-center justify-center gap-2.5">
+            <div className="w-full max-w-[560px] mx-auto py-3 px-4 rounded-btn border-2 border-dashed border-body/25 bg-white/80 flex items-center justify-center gap-2.5">
               <PenLine size={18} color="#5A5A5A" strokeWidth={2} />
               <span className="text-body-lg text-body font-semibold">
                 Teken het gebied dat gescand moet worden

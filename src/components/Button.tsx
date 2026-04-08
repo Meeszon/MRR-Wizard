@@ -20,7 +20,7 @@ export default function Button({
   className = '',
 }: ButtonProps) {
   const base =
-    'inline-flex items-center justify-center gap-2 font-semibold rounded-btn transition-all duration-150 active:scale-95 select-none'
+    'items-center justify-center gap-2 font-semibold rounded-btn transition-all duration-150 active:scale-95 select-none'
 
   const sizes = {
     sm: 'px-3 py-1.5 text-body',
@@ -50,7 +50,7 @@ export default function Button({
     <button
       onClick={disabled ? undefined : onClick}
       disabled={disabled}
-      className={[base, sizes[size], variants[variant], fullWidth ? 'w-full' : '', className].join(
+      className={[base, sizes[size], variants[variant], fullWidth ? 'flex w-full max-w-[560px] mx-auto' : 'inline-flex', className].join(
         ' ',
       )}
     >

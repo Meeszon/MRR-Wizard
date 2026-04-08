@@ -184,7 +184,7 @@ export default function Step4_Confirm({
             {canSubmit ? (
               <button
                 onClick={onSubmit}
-                className="w-full rounded-btn bg-primary flex items-center justify-center gap-2 shadow active:scale-[0.98] transition-transform"
+                className="w-full max-w-[560px] mx-auto rounded-btn bg-primary flex items-center justify-center gap-2 shadow active:scale-[0.98] transition-transform"
                 style={{ height: 44 }}
               >
                 <Check size={17} color="white" strokeWidth={3} />
@@ -195,7 +195,7 @@ export default function Step4_Confirm({
             ) : (
               <button
                 disabled
-                className="w-full rounded-btn flex items-center justify-center gap-2"
+                className="w-full max-w-[560px] mx-auto rounded-btn flex items-center justify-center gap-2"
                 style={{ height: 44, background: "#E0E0E0" }}
               >
                 <Check size={17} color="#AAAAAA" strokeWidth={3} />

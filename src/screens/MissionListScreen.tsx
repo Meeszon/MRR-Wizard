@@ -92,7 +92,7 @@ export default function MissionListScreen({
           return (
             <div
               key={mission.id}
-              className="bg-white rounded-card border border-border flex items-center gap-3"
+              className="bg-white rounded-card border border-border flex items-center gap-3 w-full max-w-[560px] mx-auto"
               style={{
                 padding: "12px 14px",
                 boxShadow: "0 1px 3px rgba(0,0,0,0.04)",

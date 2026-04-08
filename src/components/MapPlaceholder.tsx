@@ -22,7 +22,7 @@ export default function MapPlaceholder({ mode, className = '' }: MapPlaceholderP
       </svg>
 
       {/* Fake terrain / roads */}
-      <svg className="absolute inset-0 w-full h-full opacity-20" xmlns="http://www.w3.org/2000/svg">
+      <svg className="absolute inset-0 w-full h-full opacity-20" viewBox="0 0 640 360" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
         <path d="M 60 0 L 80 360" stroke="#888" strokeWidth="6" fill="none" />
         <path d="M 0 120 L 640 100" stroke="#888" strokeWidth="4" fill="none" />
         <rect x="120" y="60" width="80" height="60" fill="#c9b99a" opacity="0.6" />

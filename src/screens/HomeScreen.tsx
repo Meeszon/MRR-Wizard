@@ -96,7 +96,7 @@ export default function HomeScreen({
         {/* New Mission */}
         <button
           onClick={onNewMission}
-          className="flex items-center gap-4 rounded-card active:scale-[0.98] transition-transform select-none w-full"
+          className="flex items-center gap-4 rounded-card active:scale-[0.98] transition-transform select-none w-full max-w-[560px] mx-auto"
           style={{
             background: BLUE,
             padding: "14px 16px",
@@ -132,7 +132,7 @@ export default function HomeScreen({
         {/* My Missions */}
         <button
           onClick={onMyMissions}
-          className="flex items-center gap-4 rounded-card active:scale-[0.98] transition-transform select-none w-full bg-white border border-border"
+          className="flex items-center gap-4 rounded-card active:scale-[0.98] transition-transform select-none w-full max-w-[560px] mx-auto bg-white border border-border"
           style={{
             padding: "14px 16px",
             boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
