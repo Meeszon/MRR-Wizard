@@ -1,6 +1,6 @@
 # MRR Drones — Mission Wizard
 
-A mission planning UI for DJI drone controllers. Designed for a **640×360px screen** — built to be fast and easy to use in the field.
+A mission planning UI for MRR Drones. Designed for the **DJI RC controller display** and landscape mobile phones — built to be fast and easy to use in the field.
 
 ## What it does
 
@@ -33,4 +33,4 @@ npm run preview   # preview production build
 
 ## Screen size
 
-Fixed at **640×360px** — matches the DJI RC controller display. Not intended to be responsive.
+Designed for the **DJI RC controller** (640×360px) and landscape mobile phones.
