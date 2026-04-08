@@ -58,8 +58,8 @@ export default function MapPlaceholder({ mode, className = '' }: MapPlaceholderP
               [418, 152],
               [358, 210],
               [208, 203],
-            ].map(([x, y], i) => (
-              <circle key={i} cx={x} cy={y} r="6" fill="#3D5AF2" stroke="white" strokeWidth="2" />
+            ].map(([x, y]) => (
+              <circle key={`${x},${y}`} cx={x} cy={y} r="6" fill="#3D5AF2" stroke="white" strokeWidth="2" />
             ))}
           </svg>
         </div>
@@ -80,8 +80,8 @@ export default function MapPlaceholder({ mode, className = '' }: MapPlaceholderP
               [418, 152],
               [358, 210],
               [208, 203],
-            ].map(([x, y], i) => (
-              <circle key={i} cx={x} cy={y} r="5" fill="#3D5AF2" stroke="white" strokeWidth="2" />
+            ].map(([x, y]) => (
+              <circle key={`${x},${y}`} cx={x} cy={y} r="5" fill="#3D5AF2" stroke="white" strokeWidth="2" />
             ))}
           </svg>
         </div>

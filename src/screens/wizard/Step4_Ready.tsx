@@ -14,7 +14,7 @@ export default function Step4_Ready({ missionName, isEdit, onStart, onHome }: St
       {/* Top spacer */}
       <div />
 
-      {/* Gecentreerde content */}
+      {/* Centered content */}
       <div className="flex flex-col items-center gap-4 text-center">
         <CheckCircle size={60} color="#22C55E" strokeWidth={1.75} />
 
@@ -31,7 +31,7 @@ export default function Step4_Ready({ missionName, isEdit, onStart, onHome }: St
         </div>
       </div>
 
-      {/* Knoppen — naast elkaar */}
+      {/* Buttons — side by side */}
       <div className="w-full flex gap-2">
         <button
           onClick={onHome}

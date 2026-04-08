@@ -9,22 +9,13 @@ import {
   Battery,
 } from "lucide-react";
 import type { Mission } from "../types";
+import { calcMetrics } from "../constants";
 
 interface MissionListScreenProps {
   missions: Mission[];
   onBack: () => void;
   onStart: (mission: Mission) => void;
   onEdit: (mission: Mission) => void;
-}
-
-const CURRENT_BATTERY = 65; // zelfde als Step3_Settings
-
-function calcMetrics(quality: number) {
-  const q = quality / 100;
-  const flightTime = Math.round(10 + 35 * q);
-  const batteryNeed = Math.round(20 + 60 * q);
-  const feasible = batteryNeed <= CURRENT_BATTERY;
-  return { flightTime, batteryNeed, feasible };
 }
 
 export default function MissionListScreen({
@@ -62,9 +53,9 @@ export default function MissionListScreen({
         )}
       </div>
 
-      {/* Lijst */}
+      {/* List */}
       <div className="flex-1 overflow-y-auto px-8 py-4 flex flex-col gap-2.5 min-h-0">
-        {/* Leeg-state */}
+        {/* Empty state */}
         {missions.length === 0 && (
           <div className="flex-1 flex flex-col items-center justify-center gap-3">
             <div
@@ -93,7 +84,7 @@ export default function MissionListScreen({
           </div>
         )}
 
-        {/* Missie-kaarten */}
+        {/* Mission cards */}
         {missions.map((mission) => {
           const { flightTime, batteryNeed, feasible } = calcMetrics(
             mission.quality,
@@ -109,7 +100,7 @@ export default function MissionListScreen({
             >
               {/* Info */}
               <div className="flex-1 min-w-0">
-                {/* Locatie */}
+                {/* Location */}
                 <div className="flex items-center gap-1.5 min-w-0">
                   <Locate
                     size={13}
@@ -167,7 +158,7 @@ export default function MissionListScreen({
                 </div>
               </div>
 
-              {/* Acties */}
+              {/* Actions */}
               <div className="flex items-center gap-2 flex-shrink-0">
                 <button
                   onClick={() => onEdit(mission)}

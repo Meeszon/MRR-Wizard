@@ -15,24 +15,13 @@ import type { WizardState } from "../../types";
 import Toggle from "../../components/Toggle";
 import BigSlider from "../../components/BigSlider";
 import WizardBar from "../../components/WizardBar";
-
-const CURRENT_BATTERY = 65; // simulated, would come from device
+import { CURRENT_BATTERY, calcMetrics } from "../../constants";
 
 function qualityLabel(q: number) {
   if (q <= 25) return "Snel";
   if (q <= 50) return "Normaal";
   if (q <= 75) return "Gedetailleerd";
   return "Maximaal";
-}
-
-function calcMetrics(quality: number) {
-  const q = (isNaN(quality) ? 50 : quality) / 100;
-  const flightTime = Math.round(10 + 35 * q); // 10–45 min
-  const flightHeight = Math.round(80 - 65 * q); // 80–15 m
-  const photos = Math.round(100 + 700 * q); // 100–800
-  const batteryNeed = Math.round(20 + 60 * q); // 20–80 %
-  const feasible = batteryNeed <= CURRENT_BATTERY;
-  return { flightTime, flightHeight, photos, batteryNeed, feasible };
 }
 
 interface Step3Props {
@@ -89,7 +78,7 @@ return (
       {/* Scrollable content */}
       <div className="flex-1 overflow-y-auto min-h-0 px-4 pt-3 pb-2">
         <div className="bg-bg-primary rounded-card border border-border overflow-hidden">
-          {/* Beeldkwaliteit — drill-down */}
+          {/* Quality — drill-down */}
           <button
             className="w-full flex items-center gap-3 px-4 hover:bg-bg-secondary transition-colors"
             style={{ minHeight: 60, paddingBlock: 10 }}
@@ -113,7 +102,7 @@ return (
 
           <div className="h-px bg-border" />
 
-          {/* Hoogste punt — stepper */}
+          {/* Highest point — stepper */}
           <div
             className="px-4 flex items-center gap-3"
             style={{ minHeight: 60, paddingBlock: 10 }}
@@ -198,7 +187,7 @@ return (
 
           <div className="h-px bg-border" />
 
-          {/* RTK Precisie — toggle */}
+          {/* RTK precision — toggle */}
           <div
             className="px-4 flex items-center gap-3"
             style={{ minHeight: 60, paddingBlock: 10 }}
@@ -229,7 +218,7 @@ return (
 
           <div className="h-px bg-border" />
 
-          {/* Applicatie — drill-down (static) */}
+          {/* Applicatie — read-only */}
           <div
             className="px-4 flex items-center gap-3"
             style={{ minHeight: 60 }}
@@ -244,11 +233,6 @@ return (
             >
               {wizard.app}
             </span>
-            <ChevronRight
-              size={16}
-              color="#E0E0E0"
-              className="flex-shrink-0 ml-1"
-            />
           </div>
         </div>
       </div>

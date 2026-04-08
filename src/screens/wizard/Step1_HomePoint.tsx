@@ -44,7 +44,7 @@ export default function Step1_HomePoint({
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                setPlaced(true);
+                onNext();
               }}
               className="bg-white rounded-btn shadow-md border border-border px-2.5 py-2 flex items-center gap-1.5 active:scale-95 transition-transform"
             >
@@ -59,7 +59,7 @@ export default function Step1_HomePoint({
           <div className="absolute bottom-16 left-3 right-3 flex justify-center pointer-events-none">
             <div className="bg-white/90 rounded-btn px-3 py-1.5 flex items-center gap-1.5 shadow-sm">
               <Info size={12} color="#5A5A5A" className="flex-shrink-0" />
-              <span className="text-body text-body font-medium">
+              <span className="text-body font-medium">
                 De drone stijgt hier op en keert hier terug.
               </span>
             </div>
@@ -70,7 +70,7 @@ export default function Step1_HomePoint({
           <div className="absolute bottom-16 left-3 right-3 flex justify-center pointer-events-none">
             <div className="bg-white/90 rounded-btn px-3 py-1.5 flex items-center gap-1.5 shadow-sm">
               <Info size={12} color="#5A5A5A" className="flex-shrink-0" />
-              <span className="text-body text-body font-medium">
+              <span className="text-body font-medium">
                 Verplaats de pin naar de exacte opstijg- en landingsplek door
                 hem te slepen.
               </span>

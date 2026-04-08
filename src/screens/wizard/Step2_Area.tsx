@@ -63,7 +63,7 @@ export default function Step2_Area({
           <div className="absolute bottom-16 left-3 right-3 flex justify-center pointer-events-none">
             <div className="bg-white/90 rounded-btn px-3 py-1.5 flex items-center gap-1.5 shadow-sm">
               <Info size={12} color="#5A5A5A" className="flex-shrink-0" />
-              <span className="text-body text-body font-medium">
+              <span className="text-body font-medium">
                 {isClosed
                   ? "Controleer het gebied en bevestig"
                   : clicks === 0

@@ -1,5 +1,5 @@
 import { Plus, FolderOpen } from "lucide-react";
-import logo from "../../logo.png";
+import logo from "../assets/logo.png";
 
 interface HomeScreenProps {
   onNewMission: () => void;
@@ -9,7 +9,7 @@ interface HomeScreenProps {
 
 const BLUE = "#3D5AF2";
 
-// Mock drone status — vervang later door echte apparaatstatus
+// Mock drone status — replace with real device state later
 const DRONE_CONNECTED = true;
 const DRONE_BATTERY = 65;
 
@@ -20,7 +20,7 @@ export default function HomeScreen({
 }: HomeScreenProps) {
   return (
     <div className="w-full h-full flex flex-col bg-bg-secondary">
-      {/* White header — zelfde stijl als WizardBar */}
+      {/* White header — same style as WizardBar */}
       <div
         className="flex items-center bg-white border-b border-border px-4 flex-shrink-0"
         style={{ height: "56px" }}
@@ -48,7 +48,7 @@ export default function HomeScreen({
           Autonome vluchten
         </span>
 
-        {/* Drone status — rechts */}
+        {/* Drone status — right */}
         <div className="ml-auto flex items-center gap-2">
           {/* Dot + label */}
           <div className="flex items-center gap-1.5">
@@ -66,7 +66,7 @@ export default function HomeScreen({
             <div style={{ width: "1px", height: "14px", background: "#E0E0E0", margin: "0 6px" }} />
           )}
 
-          {/* Batterij met vulling */}
+          {/* Battery with fill indicator */}
           {DRONE_CONNECTED && (
             <div className="flex items-center gap-1.5">
               <svg width="22" height="9" viewBox="0 0 22 9" fill="none">
@@ -93,7 +93,7 @@ export default function HomeScreen({
 
       {/* Content */}
       <div className="flex-1 flex flex-col justify-center gap-3 px-8 min-h-0">
-        {/* Nieuwe Missie */}
+        {/* New Mission */}
         <button
           onClick={onNewMission}
           className="flex items-center gap-4 rounded-card active:scale-[0.98] transition-transform select-none w-full"
@@ -129,7 +129,7 @@ export default function HomeScreen({
           </div>
         </button>
 
-        {/* Mijn Missies */}
+        {/* My Missions */}
         <button
           onClick={onMyMissions}
           className="flex items-center gap-4 rounded-card active:scale-[0.98] transition-transform select-none w-full bg-white border border-border"

@@ -1,5 +1,5 @@
 export type AppName = 'OpenDroneMap'
-// Uitbreiding naar meer apps is gepland — voeg hier nieuwe namen toe
+// Intentionally extensible — add new app names here
 
 export interface Mission {
   id: string

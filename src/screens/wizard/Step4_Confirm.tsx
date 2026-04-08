@@ -12,24 +12,13 @@ import {
 import type { WizardState } from "../../types";
 import WizardBar from "../../components/WizardBar";
 import MapPlaceholder from "../../components/MapPlaceholder";
-
-const CURRENT_BATTERY = 65;
+import { calcMetrics } from "../../constants";
 
 function qualityLabel(q: number) {
   if (q <= 25) return "Snel";
   if (q <= 50) return "Normaal";
   if (q <= 75) return "Gedetailleerd";
   return "Maximaal";
-}
-
-function calcMetrics(quality: number, highestPoint: number) {
-  const q = (isNaN(quality) ? 50 : quality) / 100;
-  const flightTime = Math.round(10 + 35 * q);
-  const baseHeight = Math.round(80 - 65 * q);
-  const flightHeight = baseHeight + highestPoint;
-  const batteryNeed = Math.round(20 + 60 * q);
-  const feasible = batteryNeed <= CURRENT_BATTERY;
-  return { flightTime, flightHeight, batteryNeed, feasible };
 }
 
 interface Step4Props {
@@ -109,7 +98,7 @@ export default function Step4_Confirm({
       />
 
       <div className="flex flex-1 min-h-0">
-        {/* Kaart — 55% */}
+        {/* Map — 55% */}
         <div className="relative" style={{ width: "55%" }}>
           <MapPlaceholder mode="confirm" className="absolute inset-0" />
           {!isEdit && (
@@ -126,12 +115,12 @@ export default function Step4_Confirm({
           )}
         </div>
 
-        {/* Rechter paneel — 45% */}
+        {/* Right panel — 45% */}
         <div
           className="flex flex-col bg-white border-l border-border"
           style={{ width: "45%" }}
         >
-          {/* Naam invoerveld */}
+          {/* Name input */}
           <div className="flex-shrink-0 px-3 pt-3 pb-2">
             <div
               className="flex items-center gap-2 rounded-btn px-2.5"
@@ -154,7 +143,7 @@ export default function Step4_Confirm({
             </div>
           </div>
 
-          {/* Info rijen */}
+          {/* Info rows */}
           <div className="flex-1 overflow-y-auto min-h-0 border-t border-border">
             <InfoRow
               icon={<Clock size={13} />}
@@ -189,9 +178,9 @@ export default function Step4_Confirm({
             />
           </div>
 
-          {/* Actieknoppen + opslaan */}
+          {/* Action buttons */}
           <div className="flex-shrink-0 px-6 pt-2 pb-3 flex flex-col gap-2">
-            {/* Primaire knop */}
+            {/* Primary button */}
             {canSubmit ? (
               <button
                 onClick={onSubmit}
@@ -213,7 +202,7 @@ export default function Step4_Confirm({
                 <span
                   style={{ fontSize: 14, fontWeight: 700, color: "#AAAAAA" }}
                 >
-                  Bevestig Missie
+                  Missie Opslaan
                 </span>
               </button>
             )}
