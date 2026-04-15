@@ -1,0 +1,37 @@
+@use '../../styles/variables' as *;
+
+.track {
+  width: 44px;
+  height: 24px;
+  border-radius: 12px;
+  position: relative;
+  transition: background-color $transition-normal;
+  flex-shrink: 0;
+}
+
+.trackOn {
+  background-color: $color-primary;
+}
+
+.trackOff {
+  background-color: $color-border;
+}
+
+.thumb {
+  position: absolute;
+  top: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: left $transition-normal;
+}
+
+.thumbOn {
+  left: 23px;
+}
+
+.thumbOff {
+  left: 3px;
+}

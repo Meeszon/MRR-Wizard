@@ -1,0 +1,25 @@
+@use 'variables' as *;
+
+@mixin card-shadow {
+  box-shadow: $shadow-card;
+}
+
+@mixin primary-shadow {
+  box-shadow: $shadow-primary;
+}
+
+@mixin touch-press {
+  transition: transform $transition-fast;
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+@mixin btn-press {
+  transition: transform $transition-fast;
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
