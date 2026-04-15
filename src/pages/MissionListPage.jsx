@@ -20,7 +20,7 @@ export default function MissionListPage() {
 
   function handleEdit(mission) {
     startEditWizard(mission)
-    navigate('/wizard/step3')
+    navigate('/missions/edit')
   }
 
   function handleStart(mission) {

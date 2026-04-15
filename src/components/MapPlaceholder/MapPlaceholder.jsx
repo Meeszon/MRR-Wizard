@@ -49,7 +49,7 @@ export default function MapPlaceholder({ mode, className = '' }) {
         </div>
       )}
 
-      {(mode === 'draw' || mode === 'confirm') && (
+      {(mode === 'draw' || mode === 'confirm' || mode === 'edit') && (
         <div className="absolute inset-0">
           <svg
             className="absolute inset-0 w-full h-full"
@@ -75,12 +75,33 @@ export default function MapPlaceholder({ mode, className = '' }) {
                 key={`${x},${y}`}
                 cx={x}
                 cy={y}
-                r={mode === 'confirm' ? 5 : 6}
+                r={mode === 'confirm' || mode === 'edit' ? 5 : 6}
                 fill="#3D5AF2"
                 stroke="white"
                 strokeWidth="2"
               />
             ))}
+            {mode === 'edit' && (
+              <>
+                {/* Home point marker */}
+                <path
+                  d="M130 290C130 278.954 138.954 270 150 270C161.046 270 170 278.954 170 290C170 305 150 322 150 322C150 322 130 305 130 290Z"
+                  fill="#3D5AF2"
+                />
+                <circle cx="150" cy="290" r="6" fill="white" />
+                {/* Dashed line from home to polygon */}
+                <line
+                  x1="150"
+                  y1="270"
+                  x2="215"
+                  y2="203"
+                  stroke="#3D5AF2"
+                  strokeWidth="1.5"
+                  strokeDasharray="5 4"
+                  opacity="0.4"
+                />
+              </>
+            )}
           </svg>
         </div>
       )}

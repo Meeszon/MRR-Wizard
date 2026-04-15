@@ -9,6 +9,7 @@ import Step2Area from './pages/wizard/Step2_Area'
 import Step3Settings from './pages/wizard/Step3_Settings'
 import Step4Confirm from './pages/wizard/Step4_Confirm'
 import Step4Ready from './pages/wizard/Step4_Ready'
+import EditMissionPage from './pages/EditMissionPage'
 
 export default function App() {
   return (
@@ -25,6 +26,7 @@ export default function App() {
                 <Route path="/wizard/step3" element={<Step3Settings />} />
                 <Route path="/wizard/step4" element={<Step4Confirm />} />
                 <Route path="/wizard/ready" element={<Step4Ready />} />
+                <Route path="/missions/edit" element={<EditMissionPage />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </div>
