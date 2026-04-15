@@ -8,19 +8,21 @@ Step-by-step wizard to set up a drone survey mission:
 
 1. **Home point** — set the takeoff/landing location on the map
 2. **Survey area** — draw the area to be flown
-3. **Settings** — configure altitude, overlap, speed, and app (OpenDroneMap)
+3. **Settings** — configure altitude, quality, RTK, and app (OpenDroneMap)
 4. **Confirm** — name and save the mission
 
 Saved missions can be viewed and re-edited from the mission list. All text is in Dutch.
 
 ## Stack
 
-- React 18 + TypeScript
+- React 18 (JavaScript)
+- React Router v6 (HashRouter)
 - Vite
 - Tailwind CSS v3
+- SCSS modules for component styles
 - DM Sans font
 
-No backend. Missions are held in memory.
+No backend. Missions are held in memory via React Context.
 
 ## Run locally
 
@@ -29,6 +31,25 @@ npm install
 npm run dev       # localhost:5173
 npm run build     # production build
 npm run preview   # preview production build
+```
+
+## Code quality
+
+ESLint (Airbnb config) and Prettier run automatically on every commit via Husky + lint-staged. Only staged files are checked.
+
+## Project structure
+
+```
+src/
+  pages/          # Route-level page components
+    wizard/       # Step1–Step4 wizard pages
+  components/     # Shared UI primitives (Button, Toggle, WizardBar, …)
+  context/        # React Context providers (App, Missions, Wizard)
+  hooks/          # Custom hooks (useWizard, useMissions, useAppPrefs)
+  services/       # Mission data helpers (build/update mission objects)
+  utils/          # Pure utility functions
+  data/           # Mock seed data
+  styles/         # Global SCSS + design token variables/mixins
 ```
 
 ## Screen size
