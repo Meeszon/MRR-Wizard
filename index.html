@@ -3,6 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover" />
+    <script>
+      // Scale viewport for wide/low-DPI devices (e.g. Kiwi or Firefox on DJI RC Pro).
+      // Those report a CSS viewport >700px, making the app appear zoomed out.
+      ;(function () {
+        if (window.innerWidth > 700) {
+          var m = document.querySelector('meta[name="viewport"]')
+          if (m) m.setAttribute('content', 'width=640, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover')
+        }
+      })()
+    </script>
     <title>MRR Drones</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -13,6 +23,6 @@
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

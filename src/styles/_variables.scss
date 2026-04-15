@@ -1,0 +1,30 @@
+// Design tokens mirroring tailwind.config.js
+// Use these in .module.scss files for component-scoped styles
+
+// Colors
+$color-primary: #3d5af2;
+$color-primary-dark: #2d47d9;
+$color-bg-primary: #ffffff;
+$color-bg-secondary: #f8f8f8;
+$color-title: #23262f;
+$color-body: #5a5a5a;
+$color-negative: #e0515f;
+$color-positive: #67d7a3;
+$color-highlight: #ffc107;
+$color-border: #e0e0e0;
+
+// Border radii
+$radius-btn: 5px;
+$radius-card: 10px;
+
+// Panel constraints
+$panel-max-width: 640px;
+
+// Transitions
+$transition-fast: 0.15s ease;
+$transition-normal: 0.2s ease;
+
+// Shadows
+$shadow-card: 0 1px 3px rgba(0, 0, 0, 0.05);
+$shadow-primary: 0 3px 14px rgba(61, 90, 242, 0.28);
+$shadow-btn: 0 2px 8px rgba(61, 90, 242, 0.25);
