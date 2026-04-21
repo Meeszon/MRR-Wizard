@@ -88,7 +88,7 @@ export default function HomePage() {
           {/* 1 — Start a Flight (blue, full width) */}
           <button
             type="button"
-            onClick={() => navigate('/missions')}
+            onClick={() => navigate('/start-flight')}
             className="flex items-center gap-4 rounded-card active:scale-[0.98] transition-transform select-none w-full"
             style={{
               background: BLUE,
@@ -104,10 +104,10 @@ export default function HomePage() {
             </div>
             <div className="text-left">
               <div className="font-bold text-white" style={{ fontSize: '15px' }}>
-                Start a Flight
+                Start Flight
               </div>
               <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.55)', marginTop: '2px' }}>
-                Select and launch an existing mission
+                Select and launch a mission
               </div>
             </div>
           </button>
@@ -127,7 +127,7 @@ export default function HomePage() {
             </div>
             <div className="text-left">
               <div className="font-bold text-title" style={{ fontSize: '15px' }}>
-                Create a new Mission
+                Create Mission
               </div>
               <div style={{ fontSize: '12px', color: '#888', marginTop: '2px' }}>
                 Set up step by step
@@ -170,7 +170,7 @@ export default function HomePage() {
               </div>
               <div className="text-left min-w-0">
                 <div className="font-bold text-title truncate" style={{ fontSize: '15px' }}>
-                  My Missions
+                  Manage Missions
                 </div>
                 <div
                   className="truncate"

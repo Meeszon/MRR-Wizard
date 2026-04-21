@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import {
   ArrowLeft,
   ArrowRight,
@@ -23,6 +23,7 @@ import { qualityLabel } from '../utils/qualityUtils'
 
 export default function EditMissionPage() {
   const navigate = useNavigate()
+  const location = useLocation()
   const { wizard, updateWizard, resetWizard } = useWizard()
   const { updateMission } = useMissions()
   const { hintsVisible } = useAppPrefs()
@@ -57,12 +58,14 @@ export default function EditMissionPage() {
       highestPointMeters: wizard.highestPointMeters,
     })
     resetWizard()
-    navigate('/missions')
+    navigate(location.state?.from ?? '/missions', {
+      state: { selectedMissionId: wizard.editingMission?.id },
+    })
   }
 
   function handleBack() {
     resetWizard()
-    navigate('/missions')
+    navigate(location.state?.from ?? '/missions')
   }
 
   return (

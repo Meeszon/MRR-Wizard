@@ -1,14 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import {
-  ArrowLeft,
-  Play,
-  Pencil,
-  PlusCircle,
-  FolderOpen,
-  Locate,
-  Clock,
-  Battery,
-} from 'lucide-react'
+import { ArrowLeft, Play, Pencil, Plus, FolderOpen, Locate, Clock, Battery } from 'lucide-react'
 import { useMissions } from '../hooks/useMissions'
 import { useWizard } from '../hooks/useWizard'
 import { calcMetrics } from '../constants'
@@ -18,7 +9,7 @@ const BLUE = '#3D5AF2'
 export default function MissionListPage() {
   const navigate = useNavigate()
   const { missions, setLastMissionName } = useMissions()
-  const { startEditWizard } = useWizard()
+  const { startEditWizard, startNewWizard } = useWizard()
 
   function handleEdit(mission) {
     startEditWizard(mission)
@@ -28,6 +19,11 @@ export default function MissionListPage() {
   function handleStart(mission) {
     setLastMissionName(mission.name)
     navigate('/wizard/ready')
+  }
+
+  function handleNewMission() {
+    startNewWizard()
+    navigate('/wizard/step1')
   }
 
   return (
@@ -63,124 +59,139 @@ export default function MissionListPage() {
           missions={missions}
           onEdit={(m) => handleEdit(m)}
           onStart={(m) => handleStart(m)}
+          onNew={() => handleNewMission()}
         />
       </div>
     </div>
   )
 }
 
-function ActiveList({ missions, onEdit, onStart }) {
-  const navigate = useNavigate()
+function NewMissionCard({ onNew }) {
+  return (
+    <button
+      type="button"
+      onClick={onNew}
+      className="flex items-center gap-3 w-full max-w-[560px] mx-auto rounded-card active:scale-[0.98] transition-transform select-none bg-white"
+      style={{
+        padding: '12px 14px',
+        border: `1.5px solid rgba(61, 91, 242, 0.36)`,
+        boxShadow: '0 2px 10px rgba(61, 91, 242, 0.05)',
+      }}
+    >
+      <div
+        className="flex items-center justify-center rounded-btn flex-shrink-0"
+        style={{ width: '32px', height: '32px', background: 'rgba(61,90,242,0.10)' }}
+      >
+        <Plus size={17} color={BLUE} strokeWidth={2.5} />
+      </div>
+      <span style={{ fontSize: '14px', fontWeight: 700, color: BLUE }}>New Mission</span>
+    </button>
+  )
+}
 
+function ActiveList({ missions, onEdit, onStart, onNew }) {
   if (missions.length === 0) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center gap-3">
-        <div
-          className="flex items-center justify-center rounded-card"
-          style={{ width: '52px', height: '52px', background: '#EBEBEB' }}
-        >
-          <FolderOpen size={22} color="#AAAAAA" strokeWidth={1.75} />
+      <div className="flex-1 flex flex-col gap-2.5">
+        <NewMissionCard onNew={onNew} />
+        <div className="flex-1 flex flex-col items-center justify-center gap-3">
+          <div
+            className="flex items-center justify-center rounded-card"
+            style={{ width: '52px', height: '52px', background: '#EBEBEB' }}
+          >
+            <FolderOpen size={22} color="#AAAAAA" strokeWidth={1.75} />
+          </div>
+          <p style={{ fontSize: '13px', color: '#888' }}>No missions created yet</p>
         </div>
-        <p style={{ fontSize: '13px', color: '#888' }}>No missions created yet</p>
-        <button
-          type="button"
-          onClick={() => navigate('/')}
-          className="flex items-center gap-2 rounded-btn active:scale-[0.98] transition-transform"
-          style={{
-            padding: '8px 14px',
-            background: BLUE,
-            color: 'white',
-            fontSize: '13px',
-            fontWeight: 600,
-          }}
-        >
-          <PlusCircle size={15} color="white" />
-          Create your first mission
-        </button>
       </div>
     )
   }
 
-  return missions.map((mission) => {
-    const { flightTime, batteryNeed, feasible } = calcMetrics(mission.quality)
-    return (
-      <div
-        key={mission.id}
-        className="bg-white rounded-card border border-border flex items-center gap-3 w-full max-w-[560px] mx-auto"
-        style={{ padding: '12px 14px', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}
-      >
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-1.5 min-w-0">
-            <Locate size={13} color={BLUE} strokeWidth={2} className="flex-shrink-0" />
-            <span className="font-bold text-title truncate" style={{ fontSize: '14px' }}>
-              {mission.name}
-            </span>
-          </div>
-          <div className="flex items-center gap-3 mt-1.5">
-            <div className="flex items-center gap-1">
-              <Clock size={12} color="#888" strokeWidth={2} />
-              <span style={{ fontSize: '12px', color: '#888' }}>{flightTime} min</span>
+  return (
+    <>
+      <NewMissionCard onNew={onNew} />
+      {missions.map((mission) => {
+        const { flightTime, batteryNeed, feasible } = calcMetrics(mission.quality)
+        return (
+          <div
+            key={mission.id}
+            className="bg-white rounded-card border border-border flex items-center gap-3 w-full max-w-[560px] mx-auto"
+            style={{ padding: '12px 14px', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}
+          >
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-1.5 min-w-0">
+                <Locate size={13} color={BLUE} strokeWidth={2} className="flex-shrink-0" />
+                <span className="font-bold text-title truncate" style={{ fontSize: '14px' }}>
+                  {mission.name}
+                </span>
+              </div>
+              <div className="flex items-center gap-3 mt-1.5">
+                <div className="flex items-center gap-1">
+                  <Clock size={12} color="#888" strokeWidth={2} />
+                  <span style={{ fontSize: '12px', color: '#888' }}>{flightTime} min</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Battery size={12} color={feasible ? '#888' : '#E0515F'} strokeWidth={2} />
+                  <span
+                    style={{
+                      fontSize: '12px',
+                      color: feasible ? '#888' : '#E0515F',
+                      fontWeight: feasible ? 400 : 600,
+                    }}
+                  >
+                    -{batteryNeed}%
+                  </span>
+                  {!feasible && (
+                    <span
+                      style={{
+                        fontSize: '10px',
+                        fontWeight: 700,
+                        color: '#E0515F',
+                        background: 'rgba(224,81,95,0.1)',
+                        border: '1px solid rgba(224,81,95,0.25)',
+                        borderRadius: '4px',
+                        padding: '1px 5px',
+                      }}
+                    >
+                      Insufficient
+                    </span>
+                  )}
+                </div>
+              </div>
             </div>
-            <div className="flex items-center gap-1">
-              <Battery size={12} color={feasible ? '#888' : '#E0515F'} strokeWidth={2} />
-              <span
+
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <button
+                type="button"
+                onClick={() => onEdit(mission)}
+                className="flex items-center gap-1.5 rounded-btn active:scale-95 transition-transform select-none bg-bg-secondary border border-border"
+                style={{ padding: '7px 10px', fontSize: '12px', fontWeight: 600, color: '#5A5A5A' }}
+              >
+                <Pencil size={13} strokeWidth={2} />
+                Edit
+              </button>
+              <button
+                type="button"
+                onClick={() => feasible && onStart(mission)}
+                disabled={!feasible}
+                className="flex items-center gap-1.5 rounded-btn transition-transform select-none"
                 style={{
+                  padding: '7px 12px',
                   fontSize: '12px',
-                  color: feasible ? '#888' : '#E0515F',
-                  fontWeight: feasible ? 400 : 600,
+                  fontWeight: 700,
+                  color: feasible ? 'white' : '#AAAAAA',
+                  background: feasible ? BLUE : '#EBEBEB',
+                  boxShadow: feasible ? '0 2px 8px rgba(61,90,242,0.25)' : 'none',
+                  cursor: feasible ? 'pointer' : 'not-allowed',
                 }}
               >
-                -{batteryNeed}%
-              </span>
-              {!feasible && (
-                <span
-                  style={{
-                    fontSize: '10px',
-                    fontWeight: 700,
-                    color: '#E0515F',
-                    background: 'rgba(224,81,95,0.1)',
-                    border: '1px solid rgba(224,81,95,0.25)',
-                    borderRadius: '4px',
-                    padding: '1px 5px',
-                  }}
-                >
-                  Insufficient
-                </span>
-              )}
+                <Play size={12} fill={feasible ? 'white' : '#AAAAAA'} strokeWidth={0} />
+                Start
+              </button>
             </div>
           </div>
-        </div>
-
-        <div className="flex items-center gap-2 flex-shrink-0">
-          <button
-            type="button"
-            onClick={() => onEdit(mission)}
-            className="flex items-center gap-1.5 rounded-btn active:scale-95 transition-transform select-none bg-bg-secondary border border-border"
-            style={{ padding: '7px 10px', fontSize: '12px', fontWeight: 600, color: '#5A5A5A' }}
-          >
-            <Pencil size={13} strokeWidth={2} />
-            Edit
-          </button>
-          <button
-            type="button"
-            onClick={() => feasible && onStart(mission)}
-            disabled={!feasible}
-            className="flex items-center gap-1.5 rounded-btn transition-transform select-none"
-            style={{
-              padding: '7px 12px',
-              fontSize: '12px',
-              fontWeight: 700,
-              color: feasible ? 'white' : '#AAAAAA',
-              background: feasible ? BLUE : '#EBEBEB',
-              boxShadow: feasible ? '0 2px 8px rgba(61,90,242,0.25)' : 'none',
-              cursor: feasible ? 'pointer' : 'not-allowed',
-            }}
-          >
-            <Play size={12} fill={feasible ? 'white' : '#AAAAAA'} strokeWidth={0} />
-            Start
-          </button>
-        </div>
-      </div>
-    )
-  })
+        )
+      })}
+    </>
+  )
 }
