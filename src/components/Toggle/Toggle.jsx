@@ -4,7 +4,7 @@ export default function Toggle({ enabled, onChange }) {
   return (
     <button
       type="button"
-      aria-label={enabled ? 'Uitschakelen' : 'Inschakelen'}
+      aria-label={enabled ? 'Disable' : 'Enable'}
       onClick={() => onChange(!enabled)}
       className="flex items-center gap-2.5 select-none"
     >

@@ -76,9 +76,7 @@ export default function Step4Confirm() {
               style={{ padding: '6px 10px' }}
             >
               <RotateCcw size={12} color="#5A5A5A" />
-              <span style={{ fontSize: 11, fontWeight: 600, color: '#5A5A5A' }}>
-                Herteken gebied
-              </span>
+              <span style={{ fontSize: 11, fontWeight: 600, color: '#5A5A5A' }}>Redraw area</span>
             </button>
           )}
         </div>
@@ -100,7 +98,7 @@ export default function Step4Confirm() {
                 type="text"
                 value={wizard.name}
                 onChange={(e) => updateWizard({ name: e.target.value })}
-                placeholder="Typ hier de naam van de missie…"
+                placeholder="Type the mission name here…"
                 className="flex-1 outline-none bg-transparent font-semibold"
                 style={{ fontSize: 12, color: '#23262F' }}
                 autoComplete="off"
@@ -110,11 +108,19 @@ export default function Step4Confirm() {
 
           {/* Info rows */}
           <div className="flex-1 overflow-y-auto min-h-0 border-t border-border">
-            <InfoRow icon={<Clock size={13} />} label="Vluchtduur" value={`${flightTime} min`} />
-            <InfoRow icon={<ArrowUp size={13} />} label="Vlieghoogte" value={`${flightHeight} m`} />
+            <InfoRow
+              icon={<Clock size={13} />}
+              label="Flight duration"
+              value={`${flightTime} min`}
+            />
+            <InfoRow
+              icon={<ArrowUp size={13} />}
+              label="Flight altitude"
+              value={`${flightHeight} m`}
+            />
             <InfoRow
               icon={<Battery size={13} />}
-              label="Batterij"
+              label="Battery"
               value={
                 <span className="flex items-center gap-1">
                   {!feasible && <AlertTriangle size={11} color="#E0515F" />}-{batteryNeed}%
@@ -124,10 +130,10 @@ export default function Step4Confirm() {
             />
             <InfoRow
               icon={<Camera size={13} />}
-              label="Kwaliteit"
+              label="Quality"
               value={qualityLabel(wizard.quality)}
             />
-            <InfoRow icon={<Layers size={13} />} label="Applicatie" value={wizard.app} />
+            <InfoRow icon={<Layers size={13} />} label="Application" value={wizard.app} />
           </div>
 
           {/* Action buttons */}
@@ -140,9 +146,7 @@ export default function Step4Confirm() {
                 style={{ height: 44 }}
               >
                 <Check size={17} color="white" strokeWidth={3} />
-                <span style={{ fontSize: 14, fontWeight: 700, color: 'white' }}>
-                  Missie Opslaan
-                </span>
+                <span style={{ fontSize: 14, fontWeight: 700, color: 'white' }}>Save Mission</span>
               </button>
             ) : (
               <button
@@ -153,7 +157,7 @@ export default function Step4Confirm() {
               >
                 <Check size={17} color="#AAAAAA" strokeWidth={3} />
                 <span style={{ fontSize: 14, fontWeight: 700, color: '#AAAAAA' }}>
-                  Missie Opslaan
+                  Save Mission
                 </span>
               </button>
             )}

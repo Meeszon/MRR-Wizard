@@ -61,7 +61,7 @@ export default function Step3Settings() {
           >
             <Camera size={16} color="#3D5AF2" className="flex-shrink-0" />
             <span className="font-semibold text-title" style={{ fontSize: 13 }}>
-              Kwaliteit
+              Quality
             </span>
             <div className="ml-auto flex items-center gap-1.5">
               <span style={{ fontSize: 13, color: '#23262F', fontWeight: 600 }}>
@@ -78,11 +78,11 @@ export default function Step3Settings() {
             <Mountain size={16} color="#3D5AF2" className="flex-shrink-0" />
             <div className="flex flex-col gap-1 flex-1 min-w-0">
               <span className="font-semibold text-title" style={{ fontSize: 13 }}>
-                Hoogste punt
+                Highest point
               </span>
               {hintsVisible && (
                 <span style={{ fontSize: 11, color: '#5A5A5A', lineHeight: 1.3 }}>
-                  Hoe hoog is het hoogste object in het vlieggebied?
+                  How high is the tallest object in the flight area?
                 </span>
               )}
             </div>
@@ -151,10 +151,10 @@ export default function Step3Settings() {
             />
             <div className="flex flex-col gap-1 flex-1 min-w-0">
               <span className="font-semibold text-title" style={{ fontSize: 13 }}>
-                RTK Precisie
+                RTK Precision
               </span>
               <span style={{ fontSize: 11, color: '#5A5A5A', lineHeight: 1.3 }}>
-                Alleen beschikbaar voor de MRR Pro drone
+                Only available for the MRR Pro drone
               </span>
             </div>
             <div className="flex-shrink-0">
@@ -167,11 +167,11 @@ export default function Step3Settings() {
 
           <div className="h-px bg-border" />
 
-          {/* Applicatie — read-only */}
+          {/* Application — read-only */}
           <div className="px-4 flex items-center gap-3" style={{ minHeight: 60 }}>
             <Layers size={16} color="#3D5AF2" className="flex-shrink-0" />
             <span className="font-semibold text-title" style={{ fontSize: 13 }}>
-              Applicatie
+              Application
             </span>
             <span className="ml-auto" style={{ fontSize: 13, color: '#5A5A5A' }}>
               {wizard.app}
@@ -188,7 +188,7 @@ export default function Step3Settings() {
           className="w-full max-w-[560px] mx-auto py-3 rounded-btn bg-primary flex items-center justify-center gap-2 shadow active:scale-[0.98] transition-transform"
         >
           <Check size={18} color="white" strokeWidth={3} />
-          <span className="text-h3 text-white font-bold">Bevestig Instellingen</span>
+          <span className="text-h3 text-white font-bold">Confirm Settings</span>
         </button>
       </div>
 
@@ -223,7 +223,7 @@ function QualityScreen({ wizard, updateWizard, hintsVisible, onClose }) {
           className="absolute inset-0 flex items-center justify-center font-bold text-title pointer-events-none"
           style={{ fontSize: 15 }}
         >
-          Kwaliteit
+          Quality
         </span>
         {m.feasible ? (
           <div
@@ -242,7 +242,7 @@ function QualityScreen({ wizard, updateWizard, hintsVisible, onClose }) {
                 flexShrink: 0,
               }}
             />
-            <span style={{ fontSize: 11, fontWeight: 600, color: '#2a9d6e' }}>Vlucht mogelijk</span>
+            <span style={{ fontSize: 11, fontWeight: 600, color: '#2a9d6e' }}>Flight possible</span>
           </div>
         ) : (
           <div
@@ -258,7 +258,7 @@ function QualityScreen({ wizard, updateWizard, hintsVisible, onClose }) {
                 flexShrink: 0,
               }}
             />
-            <span style={{ fontSize: 11, fontWeight: 600, color: '#E0515F' }}>Vlucht te lang</span>
+            <span style={{ fontSize: 11, fontWeight: 600, color: '#E0515F' }}>Flight too long</span>
           </div>
         )}
       </div>
@@ -281,7 +281,7 @@ function QualityScreen({ wizard, updateWizard, hintsVisible, onClose }) {
               <span className="font-bold text-title" style={{ fontSize: 22, lineHeight: 1.1 }}>
                 {m.flightHeight}
               </span>
-              <span style={{ fontSize: 10, color: '#5A5A5A' }}>m hoogte</span>
+              <span style={{ fontSize: 10, color: '#5A5A5A' }}>m altitude</span>
             </div>
 
             <div className="bg-white rounded-card border border-border flex flex-col items-center justify-center gap-1 py-4">
@@ -289,7 +289,7 @@ function QualityScreen({ wizard, updateWizard, hintsVisible, onClose }) {
               <span className="font-bold text-title" style={{ fontSize: 22, lineHeight: 1.1 }}>
                 {m.photos}
               </span>
-              <span style={{ fontSize: 10, color: '#5A5A5A' }}>foto&apos;s</span>
+              <span style={{ fontSize: 10, color: '#5A5A5A' }}>photos</span>
             </div>
 
             <div className="bg-white rounded-card border border-border flex flex-col items-center justify-center gap-1 py-4">
@@ -300,7 +300,7 @@ function QualityScreen({ wizard, updateWizard, hintsVisible, onClose }) {
               >
                 -{m.batteryNeed}%
               </span>
-              <span style={{ fontSize: 10, color: '#9A9A9A' }}>Huidig: {CURRENT_BATTERY}%</span>
+              <span style={{ fontSize: 10, color: '#9A9A9A' }}>Current: {CURRENT_BATTERY}%</span>
             </div>
           </div>
 
@@ -309,10 +309,10 @@ function QualityScreen({ wizard, updateWizard, hintsVisible, onClose }) {
             <div className="bg-white rounded-card border border-border px-5 py-4">
               <div className="flex justify-between mb-4">
                 <span style={{ fontSize: 12, fontWeight: 600, color: '#5A5A5A' }}>
-                  Snel (Minder detail)
+                  Fast (Less detail)
                 </span>
                 <span style={{ fontSize: 12, fontWeight: 600, color: '#5A5A5A' }}>
-                  Traag (Veel detail)
+                  Slow (More detail)
                 </span>
               </div>
               <BigSlider
@@ -322,7 +322,7 @@ function QualityScreen({ wizard, updateWizard, hintsVisible, onClose }) {
             </div>
             {hintsVisible && (
               <span className="block text-center mt-3" style={{ fontSize: 11, color: '#5A5A5A' }}>
-                Hogere kwaliteit = meer batterij en langzamere vlucht
+                Higher quality = more battery and slower flight
               </span>
             )}
           </div>

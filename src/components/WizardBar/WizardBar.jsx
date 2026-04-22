@@ -105,7 +105,7 @@ export default function WizardBar() {
       <button
         type="button"
         onClick={toggleHints}
-        title={hintsVisible ? 'Verberg uitleg' : 'Toon uitleg'}
+        title={hintsVisible ? 'Hide hints' : 'Show hints'}
         className="w-8 h-8 flex items-center justify-center rounded-btn hover:bg-bg-secondary transition-colors flex-shrink-0"
       >
         <Info size={18} color={hintsVisible ? '#3D5AF2' : '#C0C0C0'} />

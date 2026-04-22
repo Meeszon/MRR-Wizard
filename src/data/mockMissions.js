@@ -1,7 +1,7 @@
 export const mockMissions = [
   {
     id: '1',
-    name: 'Bouwplaats Noord',
+    name: 'Construction Site North',
     createdAt: '2025-03-28',
     areaHectares: 2.4,
     quality: 65,
@@ -11,7 +11,7 @@ export const mockMissions = [
   },
   {
     id: '2',
-    name: 'Fundering Blok B',
+    name: 'Foundation Block B',
     createdAt: '2025-04-01',
     areaHectares: 0.8,
     quality: 35,
@@ -21,7 +21,7 @@ export const mockMissions = [
   },
   {
     id: '3',
-    name: 'Wegcorridor Fase 2',
+    name: 'Road Corridor Phase 2',
     createdAt: '2025-04-05',
     areaHectares: 5.1,
     quality: 80,
@@ -34,7 +34,7 @@ export const mockMissions = [
 export const mockCompletedMissions = [
   {
     id: 'c1',
-    name: 'Dakcontrole Hal 3',
+    name: 'Roof Inspection Hall 3',
     createdAt: '2025-02-10',
     completedAt: '2025-02-10',
     areaHectares: 0.6,
@@ -45,7 +45,7 @@ export const mockCompletedMissions = [
   },
   {
     id: 'c2',
-    name: 'Bouwplaats Zuid – Fase 1',
+    name: 'Construction Site South – Phase 1',
     createdAt: '2025-02-20',
     completedAt: '2025-02-21',
     areaHectares: 3.2,
@@ -56,7 +56,7 @@ export const mockCompletedMissions = [
   },
   {
     id: 'c3',
-    name: 'Parkeerterrein Oost',
+    name: 'Parking Lot East',
     createdAt: '2025-03-05',
     completedAt: '2025-03-05',
     areaHectares: 1.1,
@@ -67,7 +67,7 @@ export const mockCompletedMissions = [
   },
   {
     id: 'c4',
-    name: 'Spoorzone Inspectie',
+    name: 'Rail Zone Inspection',
     createdAt: '2025-03-14',
     completedAt: '2025-03-15',
     areaHectares: 7.8,
@@ -78,7 +78,7 @@ export const mockCompletedMissions = [
   },
   {
     id: 'c5',
-    name: 'Fundering Blok A',
+    name: 'Foundation Block A',
     createdAt: '2025-03-22',
     completedAt: '2025-03-22',
     areaHectares: 0.9,

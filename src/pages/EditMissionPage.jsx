@@ -87,7 +87,7 @@ export default function EditMissionPage() {
           className="absolute inset-0 flex items-center justify-center font-bold text-title pointer-events-none"
           style={{ fontSize: 14 }}
         >
-          Missie Bewerken
+          Edit Mission
         </span>
 
         <button
@@ -97,7 +97,7 @@ export default function EditMissionPage() {
           style={{ padding: '6px 12px' }}
         >
           <Check size={13} color="white" strokeWidth={3} />
-          <span style={{ fontSize: 12, fontWeight: 700, color: 'white' }}>Opslaan</span>
+          <span style={{ fontSize: 12, fontWeight: 700, color: 'white' }}>Save</span>
         </button>
       </div>
 
@@ -108,13 +108,13 @@ export default function EditMissionPage() {
           className="flex-shrink-0 overflow-y-auto border-r border-border bg-white flex flex-col"
           style={{ width: 232 }}
         >
-          {/* Naam */}
+          {/* Name */}
           <div className="px-3 flex items-center flex-1" style={{ minHeight: 48, maxHeight: 72 }}>
             <input
               type="text"
               value={wizard.name}
               onChange={(e) => updateWizard({ name: e.target.value })}
-              placeholder="Missienaam..."
+              placeholder="Mission name..."
               className="w-full rounded-btn border border-border bg-bg-secondary font-semibold text-title focus:outline-none focus:border-primary transition-colors"
               style={{ fontSize: 13, padding: '5px 8px' }}
             />
@@ -122,7 +122,7 @@ export default function EditMissionPage() {
 
           <div className="h-px bg-border flex-shrink-0" />
 
-          {/* Kwaliteit */}
+          {/* Quality */}
           <div
             role="button"
             tabIndex={0}
@@ -133,7 +133,7 @@ export default function EditMissionPage() {
           >
             <Camera size={15} color="#3D5AF2" className="flex-shrink-0" />
             <span className="font-semibold text-title" style={{ fontSize: 12 }}>
-              Kwaliteit
+              Quality
             </span>
             <div className="ml-auto flex items-center gap-1">
               <span style={{ fontSize: 12, color: '#5A5A5A', fontWeight: 400 }}>
@@ -145,7 +145,7 @@ export default function EditMissionPage() {
 
           <div className="h-px bg-border flex-shrink-0" />
 
-          {/* Applicatie */}
+          {/* Application */}
           <div
             role="button"
             tabIndex={0}
@@ -155,7 +155,7 @@ export default function EditMissionPage() {
           >
             <Layers size={15} color="#3D5AF2" className="flex-shrink-0" />
             <span className="font-semibold text-title" style={{ fontSize: 12 }}>
-              Applicatie
+              Application
             </span>
             <div className="ml-auto flex items-center gap-1">
               <span style={{ fontSize: 12, color: '#5A5A5A', fontWeight: 400 }}>{wizard.app}</span>
@@ -165,7 +165,7 @@ export default function EditMissionPage() {
 
           <div className="h-px bg-border flex-shrink-0" />
 
-          {/* Max. hoogte */}
+          {/* Max. height */}
           <div
             className="px-3 flex items-center gap-2.5 flex-1"
             style={{ minHeight: 48, maxHeight: 72 }}
@@ -175,7 +175,7 @@ export default function EditMissionPage() {
               className="font-semibold text-title flex-1 min-w-0 truncate"
               style={{ fontSize: 12 }}
             >
-              Max. hoogte
+              Max. height
             </span>
             <div className="flex items-center gap-0.5 flex-shrink-0">
               <button
@@ -233,7 +233,7 @@ export default function EditMissionPage() {
 
           <div className="h-px bg-border flex-shrink-0" />
 
-          {/* RTK Precisie */}
+          {/* RTK Precision */}
           <div
             className="px-3 flex items-center gap-2.5 flex-1"
             style={{ minHeight: 48, maxHeight: 72 }}
@@ -245,11 +245,9 @@ export default function EditMissionPage() {
             />
             <div className="flex flex-col gap-0.5 flex-1 min-w-0">
               <span className="font-semibold text-title" style={{ fontSize: 12 }}>
-                RTK Precisie
+                RTK Precision
               </span>
-              <span style={{ fontSize: 10, color: '#9A9A9A', lineHeight: 1.2 }}>
-                Alleen MRR Pro
-              </span>
+              <span style={{ fontSize: 10, color: '#9A9A9A', lineHeight: 1.2 }}>MRR Pro only</span>
             </div>
             <div className="flex-shrink-0">
               <Toggle
@@ -339,7 +337,7 @@ function QualityScreen({ wizard, updateWizard, hintsVisible, onClose }) {
           className="absolute inset-0 flex items-center justify-center font-bold text-title pointer-events-none"
           style={{ fontSize: 15 }}
         >
-          Kwaliteit
+          Quality
         </span>
         {m.feasible ? (
           <div
@@ -358,7 +356,7 @@ function QualityScreen({ wizard, updateWizard, hintsVisible, onClose }) {
                 flexShrink: 0,
               }}
             />
-            <span style={{ fontSize: 11, fontWeight: 600, color: '#2a9d6e' }}>Vlucht mogelijk</span>
+            <span style={{ fontSize: 11, fontWeight: 600, color: '#2a9d6e' }}>Flight possible</span>
           </div>
         ) : (
           <div
@@ -374,7 +372,7 @@ function QualityScreen({ wizard, updateWizard, hintsVisible, onClose }) {
                 flexShrink: 0,
               }}
             />
-            <span style={{ fontSize: 11, fontWeight: 600, color: '#E0515F' }}>Vlucht te lang</span>
+            <span style={{ fontSize: 11, fontWeight: 600, color: '#E0515F' }}>Flight too long</span>
           </div>
         )}
       </div>
@@ -396,14 +394,14 @@ function QualityScreen({ wizard, updateWizard, hintsVisible, onClose }) {
               <span className="font-bold text-title" style={{ fontSize: 22, lineHeight: 1.1 }}>
                 {m.flightHeight}
               </span>
-              <span style={{ fontSize: 10, color: '#5A5A5A' }}>m hoogte</span>
+              <span style={{ fontSize: 10, color: '#5A5A5A' }}>m altitude</span>
             </div>
             <div className="bg-white rounded-card border border-border flex flex-col items-center justify-center gap-1 py-4">
               <Camera size={16} color="#3D5AF2" />
               <span className="font-bold text-title" style={{ fontSize: 22, lineHeight: 1.1 }}>
                 {m.photos}
               </span>
-              <span style={{ fontSize: 10, color: '#5A5A5A' }}>foto&apos;s</span>
+              <span style={{ fontSize: 10, color: '#5A5A5A' }}>photos</span>
             </div>
             <div className="bg-white rounded-card border border-border flex flex-col items-center justify-center gap-1 py-4">
               <Battery size={16} color={m.feasible ? '#3D5AF2' : '#E0515F'} />
@@ -413,7 +411,7 @@ function QualityScreen({ wizard, updateWizard, hintsVisible, onClose }) {
               >
                 -{m.batteryNeed}%
               </span>
-              <span style={{ fontSize: 10, color: '#9A9A9A' }}>Huidig: {CURRENT_BATTERY}%</span>
+              <span style={{ fontSize: 10, color: '#9A9A9A' }}>Current: {CURRENT_BATTERY}%</span>
             </div>
           </div>
 
@@ -422,10 +420,10 @@ function QualityScreen({ wizard, updateWizard, hintsVisible, onClose }) {
             <div className="bg-white rounded-card border border-border px-5 py-4">
               <div className="flex justify-between mb-4">
                 <span style={{ fontSize: 12, fontWeight: 600, color: '#5A5A5A' }}>
-                  Snel (Minder detail)
+                  Fast (Less detail)
                 </span>
                 <span style={{ fontSize: 12, fontWeight: 600, color: '#5A5A5A' }}>
-                  Traag (Veel detail)
+                  Slow (More detail)
                 </span>
               </div>
               <BigSlider
@@ -435,7 +433,7 @@ function QualityScreen({ wizard, updateWizard, hintsVisible, onClose }) {
             </div>
             {hintsVisible && (
               <span className="block text-center mt-3" style={{ fontSize: 11, color: '#5A5A5A' }}>
-                Hogere kwaliteit = meer batterij en langzamere vlucht
+                Higher quality = more battery and slower flight
               </span>
             )}
           </div>

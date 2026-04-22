@@ -47,12 +47,12 @@ export default function Step2Area() {
               <span className="text-body font-medium">
                 {/* eslint-disable-next-line no-nested-ternary */}
                 {isClosed
-                  ? 'Controleer het gebied en bevestig'
+                  ? 'Check the area and confirm'
                   : clicks === 0
-                    ? 'Tik op de kaart om je eerste hoekpunt te plaatsen'
+                    ? 'Tap the map to place your first corner point'
                     : clicks < 3
-                      ? 'Tik en maak meer hoekpunten. Teken hiermee de omtrek van het gebied'
-                      : 'Als je klaar bent, tik je op je eerste hoekpunt om het gebied te sluiten'}
+                      ? 'Tap to add more corner points. Draw the perimeter of the area'
+                      : 'When done, tap your first corner point to close the area'}
               </span>
             </div>
           </div>
@@ -63,7 +63,7 @@ export default function Step2Area() {
             <div className="w-full max-w-[560px] mx-auto py-3 px-4 rounded-btn border-2 border-dashed border-body/25 bg-white/80 flex items-center justify-center gap-2.5">
               <PenLine size={18} color="#5A5A5A" strokeWidth={2} />
               <span className="text-body-lg text-body font-semibold">
-                Teken het gebied dat gescand moet worden
+                Draw the area to be scanned
               </span>
             </div>
           ) : (
@@ -74,7 +74,7 @@ export default function Step2Area() {
               onClick={() => navigate('/wizard/step3')}
               icon={<Check size={18} color="white" strokeWidth={2.5} />}
             >
-              Bevestig Gebied
+              Confirm Area
             </Button>
           )}
         </div>
