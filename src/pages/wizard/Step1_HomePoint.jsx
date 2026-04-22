@@ -40,9 +40,7 @@ export default function Step1HomePoint() {
           <div className="absolute bottom-16 left-3 right-3 flex justify-center pointer-events-none">
             <div className="bg-white/90 rounded-btn px-3 py-1.5 flex items-center gap-1.5 shadow-sm">
               <Info size={12} color="#5A5A5A" className="flex-shrink-0" />
-              <span className="text-body font-medium">
-                De drone stijgt hier op en keert hier terug.
-              </span>
+              <span className="text-body font-medium">The drone takes off and returns here.</span>
             </div>
           </div>
         )}
@@ -52,7 +50,7 @@ export default function Step1HomePoint() {
             <div className="bg-white/90 rounded-btn px-3 py-1.5 flex items-center gap-1.5 shadow-sm">
               <Info size={12} color="#5A5A5A" className="flex-shrink-0" />
               <span className="text-body font-medium">
-                Verplaats de pin naar de exacte opstijg- en landingsplek door hem te slepen.
+                Drag the pin to the exact takeoff and landing location.
               </span>
             </div>
           </div>
@@ -63,7 +61,7 @@ export default function Step1HomePoint() {
             <div className="w-full max-w-[560px] mx-auto py-3 px-4 rounded-btn border-2 border-dashed border-body/25 bg-white/80 flex items-center justify-center gap-2.5">
               <Home size={18} color="#5A5A5A" strokeWidth={2} />
               <span className="text-body-lg text-body font-semibold">
-                Tik op de kaart om het start- en eindpunt te plaatsen
+                Tap the map to place the home point
               </span>
             </div>
           ) : (
@@ -73,7 +71,7 @@ export default function Step1HomePoint() {
               className="w-full max-w-[560px] mx-auto py-3 rounded-btn bg-primary flex items-center justify-center gap-2 shadow active:scale-[0.98] transition-transform"
             >
               <Check size={18} color="white" strokeWidth={3} />
-              <span className="text-h3 text-white font-bold">Bevestig Start- en Eindpunt</span>
+              <span className="text-h3 text-white font-bold">Confirm Home Point</span>
             </button>
           )}
         </div>

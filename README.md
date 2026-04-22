@@ -4,14 +4,11 @@ A mission planning UI for MRR Drones. Designed for the **DJI RC controller displ
 
 ## What it does
 
-Step-by-step wizard to set up a drone survey mission:
+A field-facing control panel for drone survey operations. From the home screen you can start a flight, create a new mission, manage saved missions, or review the flight log.
 
-1. **Home point** — set the takeoff/landing location on the map
-2. **Survey area** — draw the area to be flown
-3. **Settings** — configure altitude, quality, RTK, and app (OpenDroneMap)
-4. **Confirm** — name and save the mission
+**Start Flight** lets you pick a drone and a saved mission, preview the flight area and estimated metrics, then launch. **Create Mission** walks you through a 4-step wizard: home point, survey area, flight settings (altitude, quality, RTK, app), and confirm. Completed flights are stored in the **Flight Log** with date, duration, and photo count.
 
-Saved missions can be viewed and re-edited from the mission list. All text is in Dutch.
+All UI text is in Dutch.
 
 ## Stack
 
@@ -20,7 +17,6 @@ Saved missions can be viewed and re-edited from the mission list. All text is in
 - Vite
 - Tailwind CSS v3
 - SCSS modules for component styles
-- DM Sans font
 
 No backend. Missions are held in memory via React Context.
 
@@ -32,6 +28,8 @@ npm run dev       # localhost:5173
 npm run build     # production build
 npm run preview   # preview production build
 ```
+
+Set your browser devtools display size to **640×360px** to match the DJI RC controller view.
 
 ## Code quality
 
@@ -51,7 +49,5 @@ src/
   data/           # Mock seed data
   styles/         # Global SCSS + design token variables/mixins
 ```
-
-## Screen size
 
 Designed for the **DJI RC controller** (640×360px) and landscape mobile phones.

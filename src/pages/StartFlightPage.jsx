@@ -66,7 +66,7 @@ export default function StartFlightPage() {
           className="absolute inset-0 flex items-center justify-center font-bold text-title pointer-events-none"
           style={{ fontSize: 14 }}
         >
-          Vlucht starten
+          Start Flight
         </span>
       </div>
 
@@ -148,7 +148,7 @@ export default function StartFlightPage() {
               marginBottom: 6,
             }}
           >
-            Missie
+            Mission
           </div>
 
           <div className="flex flex-col gap-1.5">
@@ -268,7 +268,7 @@ export default function StartFlightPage() {
                         }}
                       >
                         <Pencil size={13} color="#5A5A5A" />
-                        Bewerken
+                        Edit
                       </button>
                     </div>
                   )}
@@ -305,7 +305,7 @@ export default function StartFlightPage() {
             strokeWidth={0}
           />
           <span style={{ fontSize: 14, fontWeight: 700, color: canStart ? 'white' : '#B8B8B8' }}>
-            Start Missie
+            Start Mission
           </span>
         </button>
       </div>

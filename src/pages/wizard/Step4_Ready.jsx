@@ -23,13 +23,13 @@ export default function Step4Ready() {
         <CheckCircle size={60} color="#22C55E" strokeWidth={1.75} />
         <div className="flex flex-col items-center gap-1">
           <span className="font-bold text-title" style={{ fontSize: 18 }}>
-            {isEdit ? 'Missie bijgewerkt' : 'Klaar om te vliegen'}
+            {isEdit ? 'Mission updated' : 'Ready to fly'}
           </span>
           <span className="font-semibold" style={{ fontSize: 14, color: '#3D5AF2' }}>
             {lastMissionName}
           </span>
           <span style={{ fontSize: 12, color: '#9A9A9A', marginTop: 2 }}>
-            {isEdit ? 'Instellingen zijn opgeslagen.' : 'De missie is opgeslagen en gereed.'}
+            {isEdit ? 'Settings have been saved.' : 'Mission has been saved and is ready.'}
           </span>
         </div>
       </div>
@@ -56,7 +56,7 @@ export default function Step4Ready() {
         >
           <Play size={16} color="white" fill="white" strokeWidth={0} />
           <span className="font-bold text-white" style={{ fontSize: 14 }}>
-            Start Missie
+            Start Mission
           </span>
         </button>
       </div>
