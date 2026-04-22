@@ -1,14 +1,12 @@
-# MRR Drones — Mission Wizard
+# MRR Drones — Remote First
 
-A mission planning UI for MRR Drones. Designed for the **DJI RC controller display** and landscape mobile phones — built to be fast and easy to use in the field.
+A full redesign of the MRR Drones frontend, built **remote first**: every screen is designed for the **640×360px DJI RC controller display** before anything else.
 
-## What it does
+## What's here
 
-A field-facing control panel for drone survey operations. From the home screen you can start a flight, create a new mission, manage saved missions, or review the flight log.
+A control panel for drone survey operations. From the home screen you can start a flight, create a new mission, manage saved missions, or review the flight log.
 
-**Start Flight** lets you pick a drone and a saved mission, preview the flight area and estimated metrics, then launch. **Create Mission** walks you through a 4-step wizard: home point, survey area, flight settings (altitude, quality, RTK, app), and confirm. Completed flights are stored in the **Flight Log** with date, duration, and photo count.
-
-All UI text is in Dutch.
+**Start Flight** lets you pick a drone and a saved mission, preview the flight area and estimated metrics, then launch. **Create Mission** walks through a 4-step wizard: home point, survey area, flight settings (altitude, quality, RTK, app), and confirm. Completed flights are stored in the **Flight Log** with date, duration, and photo count.
 
 ## Stack
 
@@ -33,7 +31,7 @@ Set your browser devtools display size to **640×360px** to match the DJI RC con
 
 ## Code quality
 
-ESLint (Airbnb config) and Prettier run automatically on every commit via Husky + lint-staged. Only staged files are checked.
+ESLint and Prettier run automatically on every commit via Husky + lint-staged. Only staged files are checked.
 
 ## Project structure
 
@@ -49,5 +47,3 @@ src/
   data/           # Mock seed data
   styles/         # Global SCSS + design token variables/mixins
 ```
-
-Designed for the **DJI RC controller** (640×360px) and landscape mobile phones.
