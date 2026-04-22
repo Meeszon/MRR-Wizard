@@ -12,6 +12,7 @@ import Step4Ready from './pages/wizard/Step4_Ready'
 import EditMissionPage from './pages/EditMissionPage'
 import FlightLogPage from './pages/FlightLogPage'
 import StartFlightPage from './pages/StartFlightPage'
+import ManualFlightPage from './pages/ManualFlightPage'
 
 export default function App() {
   return (
@@ -31,6 +32,7 @@ export default function App() {
                 <Route path="/missions/edit" element={<EditMissionPage />} />
                 <Route path="/flightlog" element={<FlightLogPage />} />
                 <Route path="/start-flight" element={<StartFlightPage />} />
+                <Route path="/manual-flight" element={<ManualFlightPage />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </div>
