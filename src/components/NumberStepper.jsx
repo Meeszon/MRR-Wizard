@@ -2,9 +2,9 @@ import React, { useRef } from 'react'
 
 const SIZES = {
   sm: {
-    btn: { width: 26, height: 26, fontSize: 15 },
-    label: { fontSize: 12, minWidth: 40 },
-    gap: 'gap-0.5',
+    btn: { width: 32, height: 32, fontSize: 16 },
+    label: { fontSize: 13, minWidth: 48 },
+    gap: 'gap-1',
   },
   md: {
     btn: { width: 36, height: 36, fontSize: 20 },

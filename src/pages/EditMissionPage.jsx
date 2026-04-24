@@ -1,7 +1,7 @@
 /* global window */
 import React, { useState, useRef, useEffect } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, LayoutGroup } from 'framer-motion'
 import {
   X,
   Map,
@@ -19,6 +19,7 @@ import {
   Mountain,
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
 } from 'lucide-react'
 import * as turf from '@turf/turf'
 import MissionMap from '../components/MissionMap'
@@ -27,7 +28,7 @@ import NumberStepper from '../components/NumberStepper'
 import Toggle from '../components/Toggle'
 import useMissions from '../hooks/useMissions'
 import useWizard from '../hooks/useWizard'
-import { BLUE, RED, CURRENT_BATTERY, calcMetrics } from '../constants'
+import { BLUE, RED, CURRENT_BATTERY, calcMetrics, APPLICATION_OPTIONS } from '../constants'
 import qualityLabel from '../utils/qualityUtils'
 
 export default function EditMissionPage() {
@@ -38,11 +39,18 @@ export default function EditMissionPage() {
   const [undoStack, setUndoStack] = useState([])
   const [mapBounds, setMapBounds] = useState(null)
   const [metricsVisible, setMetricsVisible] = useState(false)
+  const [isEditingName, setIsEditingName] = useState(false)
+  const [nameInput, setNameInput] = useState('')
   const missionMapRef = useRef()
+  const nameInputRef = useRef()
 
   useEffect(() => {
     if (wizard.polygonClosed) setMetricsVisible(true)
   }, [wizard.polygonClosed])
+
+  useEffect(() => {
+    if (isEditingName) nameInputRef.current?.focus()
+  }, [isEditingName])
 
   if (!wizard.editingMission) {
     return <Navigate to="/missions" replace />
@@ -92,6 +100,18 @@ export default function EditMissionPage() {
         () => {},
       )
     }
+  }
+
+  function openNameEdit() {
+    setNameInput(wizard.name || '')
+    setIsEditingName(true)
+  }
+
+  function confirmName() {
+    if (nameInput.trim() !== (wizard.name || '')) {
+      updateWizard({ name: nameInput.trim() })
+    }
+    setIsEditingName(false)
   }
 
   function handleSave() {
@@ -151,33 +171,43 @@ export default function EditMissionPage() {
 
         {/* Segmented tab toggle — centered */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div
-            className="flex items-center pointer-events-auto rounded-btn border border-border p-0.5"
-            style={{ background: '#F0F1F5', gap: 0 }}
-          >
-            {[
-              { key: 'map', icon: Map, label: 'Map' },
-              { key: 'settings', icon: SlidersHorizontal, label: 'Settings' },
-            ].map(({ key, icon: Icon, label }) => (
-              <button
-                key={key}
-                type="button"
-                onClick={() => setActiveTab(key)}
-                className="relative flex items-center gap-1.5 rounded-btn select-none transition-all"
-                style={{
-                  padding: '5px 16px',
-                  fontSize: 13,
-                  fontWeight: activeTab === key ? 700 : 500,
-                  color: activeTab === key ? BLUE : '#888888',
-                  background: activeTab === key ? 'white' : 'transparent',
-                  boxShadow: activeTab === key ? '0 1px 4px rgba(0,0,0,0.10)' : 'none',
-                }}
-              >
-                <Icon size={13} />
-                {label}
-              </button>
-            ))}
-          </div>
+          <LayoutGroup>
+            <div
+              className="flex items-center pointer-events-auto rounded-btn border border-border p-0.5"
+              style={{ background: '#F0F1F5', gap: 0 }}
+            >
+              {[
+                { key: 'map', icon: Map, label: 'Flyzone' },
+                { key: 'settings', icon: SlidersHorizontal, label: 'Settings' },
+              ].map(({ key, icon: Icon, label }) => (
+                <button
+                  key={key}
+                  type="button"
+                  onClick={() => setActiveTab(key)}
+                  className="relative flex items-center rounded-btn select-none"
+                  style={{
+                    padding: '5px 16px',
+                    fontSize: 13,
+                    fontWeight: activeTab === key ? 700 : 500,
+                    color: activeTab === key ? BLUE : '#888888',
+                  }}
+                >
+                  {activeTab === key && (
+                    <motion.div
+                      layoutId="edit-tab-pill"
+                      className="absolute inset-0 bg-white rounded-btn"
+                      style={{ boxShadow: '0 1px 4px rgba(0,0,0,0.10)' }}
+                      transition={{ type: 'spring', stiffness: 500, damping: 38 }}
+                    />
+                  )}
+                  <span className="relative z-10 flex items-center gap-1.5">
+                    <Icon size={13} />
+                    {label}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </LayoutGroup>
         </div>
 
         {/* Save */}
@@ -327,7 +357,7 @@ export default function EditMissionPage() {
 
           {/* ── Settings panel ── */}
           <div className="h-full overflow-y-auto" style={{ width: '50%' }}>
-            <div className="px-4 pt-3 pb-4">
+            <div className="px-4 pt-3 pb-4 max-w-[560px] mx-auto">
               {/* Infeasibility warning */}
               {!metrics.feasible && (
                 <div
@@ -346,7 +376,7 @@ export default function EditMissionPage() {
 
               {/* Metrics strip */}
               <div
-                className="rounded-card mb-3 overflow-hidden"
+                className="rounded-card mb-4 overflow-hidden"
                 style={{
                   background: 'linear-gradient(135deg, #ECEFFE 0%, #F5F7FF 100%)',
                   border: '1px solid rgba(61,90,242,0.15)',
@@ -376,29 +406,8 @@ export default function EditMissionPage() {
 
               {/* Settings list */}
               <div className="bg-white rounded-card border border-border overflow-hidden">
-                {/* Name */}
-                <div
-                  className="flex items-center gap-3 px-4"
-                  style={{ minHeight: 52, paddingBlock: 8 }}
-                >
-                  <Pencil size={15} color={BLUE} className="flex-shrink-0" />
-                  <span className="font-semibold text-title flex-shrink-0" style={{ fontSize: 13 }}>
-                    Name
-                  </span>
-                  <input
-                    type="text"
-                    value={wizard.name}
-                    onChange={(e) => updateWizard({ name: e.target.value })}
-                    className="flex-1 text-right bg-transparent outline-none font-medium min-w-0"
-                    style={{ fontSize: 13, color: '#5A5A5A' }}
-                    placeholder="Mission name..."
-                  />
-                </div>
-
-                <div className="h-px bg-border" />
-
                 {/* Quality */}
-                <div className="px-4 pt-3 pb-1">
+                <div className="px-4 pt-3 pb-2">
                   <div className="flex items-center gap-3">
                     <Camera size={15} color={BLUE} className="flex-shrink-0" />
                     <span className="font-semibold text-title" style={{ fontSize: 13 }}>
@@ -414,6 +423,8 @@ export default function EditMissionPage() {
                   <BigSlider
                     value={wizard.quality}
                     onChange={(val) => updateWizard({ quality: val })}
+                    trackHeight={8}
+                    thumbSize={28}
                   />
                 </div>
 
@@ -422,19 +433,22 @@ export default function EditMissionPage() {
                 {/* Highest point */}
                 <div
                   className="px-4 flex items-center gap-3"
-                  style={{ minHeight: 52, paddingBlock: 8 }}
+                  style={{ minHeight: 52, paddingBlock: 12 }}
                 >
                   <Mountain size={15} color={BLUE} className="flex-shrink-0" />
-                  <span className="font-semibold text-title flex-shrink-0" style={{ fontSize: 13 }}>
-                    Highest point
-                  </span>
-                  <div className="ml-auto">
-                    <NumberStepper
-                      value={wizard.highestPointMeters}
-                      onChange={(val) => updateWizard({ highestPointMeters: val })}
-                      size="sm"
-                    />
+                  <div className="flex flex-col gap-0.5 flex-1 min-w-0">
+                    <span className="font-semibold text-title" style={{ fontSize: 13 }}>
+                      Highest point
+                    </span>
+                    <span style={{ fontSize: 11, color: '#9A9A9A', lineHeight: 1.3 }}>
+                      The height of the tallest object in the flight area
+                    </span>
                   </div>
+                  <NumberStepper
+                    value={wizard.highestPointMeters}
+                    onChange={(val) => updateWizard({ highestPointMeters: val })}
+                    size="sm"
+                  />
                 </div>
 
                 <div className="h-px bg-border" />
@@ -442,7 +456,7 @@ export default function EditMissionPage() {
                 {/* RTK Precision */}
                 <div
                   className="px-4 flex items-center gap-3"
-                  style={{ minHeight: 52, paddingBlock: 8 }}
+                  style={{ minHeight: 52, paddingBlock: 12 }}
                 >
                   <Signal
                     size={15}
@@ -453,7 +467,9 @@ export default function EditMissionPage() {
                     <span className="font-semibold text-title" style={{ fontSize: 13 }}>
                       RTK Precision
                     </span>
-                    <span style={{ fontSize: 11, color: '#9A9A9A' }}>MRR Pro only</span>
+                    <span style={{ fontSize: 11, color: '#9A9A9A', lineHeight: 1.3 }}>
+                      Only available for the MRR Pro drone
+                    </span>
                   </div>
                   <Toggle
                     enabled={wizard.rtkEnabled}
@@ -464,15 +480,99 @@ export default function EditMissionPage() {
                 <div className="h-px bg-border" />
 
                 {/* Application */}
-                <div className="px-4 flex items-center gap-3" style={{ minHeight: 52 }}>
+                <div
+                  className="px-4 flex items-center gap-3"
+                  style={{ minHeight: 52, paddingBlock: 12 }}
+                >
                   <Layers size={15} color={BLUE} className="flex-shrink-0" />
                   <span className="font-semibold text-title" style={{ fontSize: 13 }}>
                     Application
                   </span>
-                  <span className="ml-auto" style={{ fontSize: 13, color: '#5A5A5A' }}>
-                    {wizard.app}
-                  </span>
+                  <div className="ml-auto relative flex-shrink-0">
+                    <select
+                      value={wizard.app}
+                      onChange={(e) => updateWizard({ app: e.target.value })}
+                      className="appearance-none bg-bg-secondary border border-border rounded-btn outline-none cursor-pointer"
+                      style={{
+                        fontSize: 13,
+                        color: '#5A5A5A',
+                        fontWeight: 500,
+                        padding: '4px 28px 4px 8px',
+                      }}
+                    >
+                      {APPLICATION_OPTIONS.map((app) => (
+                        <option key={app} value={app}>
+                          {app}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown
+                      size={13}
+                      color="#9A9A9A"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none"
+                    />
+                  </div>
                 </div>
+
+                <div className="h-px bg-border" />
+
+                {/* Name */}
+                {isEditingName ? (
+                  <div
+                    className="flex items-center gap-2 px-4"
+                    style={{ minHeight: 52, paddingBlock: 10 }}
+                  >
+                    <Pencil size={15} color={BLUE} className="flex-shrink-0" />
+                    <input
+                      ref={nameInputRef}
+                      type="text"
+                      value={nameInput}
+                      onChange={(e) => setNameInput(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') confirmName()
+                      }}
+                      onBlur={confirmName}
+                      className="flex-1 min-w-0 bg-bg-secondary border border-border rounded-btn outline-none font-medium focus:border-primary transition-colors"
+                      style={{ fontSize: 16, color: '#23262F', padding: '6px 10px' }}
+                      placeholder="Mission name..."
+                    />
+                    <button
+                      type="button"
+                      onPointerDown={(e) => e.preventDefault()} // prevents blur firing before click
+                      onClick={confirmName}
+                      className="flex-shrink-0 flex items-center justify-center rounded-btn active:scale-95 transition-transform"
+                      style={{ width: 32, height: 32, background: BLUE }}
+                    >
+                      <Check size={14} color="white" strokeWidth={2.5} />
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={openNameEdit}
+                    className="w-full flex items-center gap-3 px-4 active:bg-bg-secondary transition-colors text-left"
+                    style={{ minHeight: 52, paddingBlock: 12 }}
+                  >
+                    <Pencil size={15} color={BLUE} className="flex-shrink-0" />
+                    <span
+                      className="font-semibold text-title flex-shrink-0"
+                      style={{ fontSize: 13 }}
+                    >
+                      Name
+                    </span>
+                    <span
+                      className="ml-auto font-medium truncate"
+                      style={{
+                        fontSize: 13,
+                        color: wizard.name ? '#5A5A5A' : '#C4C4C4',
+                        maxWidth: '55%',
+                      }}
+                    >
+                      {wizard.name || 'Add name...'}
+                    </span>
+                    <ChevronRight size={13} color="#D0D0D0" className="flex-shrink-0" />
+                  </button>
+                )}
               </div>
             </div>
           </div>

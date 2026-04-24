@@ -1,14 +1,21 @@
 import React from 'react'
 
-export default function BigSlider({ value, onChange, min = 0, max = 100 }) {
+export default function BigSlider({
+  value,
+  onChange,
+  min = 0,
+  max = 100,
+  trackHeight = 14,
+  thumbSize = 44,
+}) {
   const percent = ((value - min) / (max - min)) * 100
-  const pad = 24 // half of thumb width — keeps thumb fully visible at extremes
+  const pad = Math.round(thumbSize / 2) + 2
 
   return (
     <div
       style={{
         position: 'relative',
-        height: 56,
+        height: thumbSize + 12,
         display: 'flex',
         alignItems: 'center',
         paddingInline: pad,
@@ -19,8 +26,8 @@ export default function BigSlider({ value, onChange, min = 0, max = 100 }) {
         style={{
           position: 'relative',
           width: '100%',
-          height: 14,
-          borderRadius: 7,
+          height: trackHeight,
+          borderRadius: trackHeight / 2,
           background: '#E0E0E0',
         }}
       >
@@ -32,7 +39,7 @@ export default function BigSlider({ value, onChange, min = 0, max = 100 }) {
             top: 0,
             bottom: 0,
             width: `${percent}%`,
-            borderRadius: 7,
+            borderRadius: trackHeight / 2,
             background: '#3D5AF2',
           }}
         />
@@ -43,8 +50,8 @@ export default function BigSlider({ value, onChange, min = 0, max = 100 }) {
             top: '50%',
             left: `${percent}%`,
             transform: 'translate(-50%, -50%)',
-            width: 44,
-            height: 44,
+            width: thumbSize,
+            height: thumbSize,
             borderRadius: '50%',
             background: '#3D5AF2',
             border: '3px solid white',
