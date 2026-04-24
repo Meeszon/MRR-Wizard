@@ -1,3 +1,8 @@
+export const BLUE = '#3D5AF2'
+export const DARK = '#23262F'
+export const RED = '#E0515F'
+export const GREEN = '#22C55E'
+
 // Simulated device battery level — would come from device in production
 export const CURRENT_BATTERY = 65
 

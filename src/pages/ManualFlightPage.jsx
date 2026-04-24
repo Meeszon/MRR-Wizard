@@ -1,31 +1,14 @@
 import { useNavigate } from 'react-router-dom'
-import { ArrowLeft, Joystick } from 'lucide-react'
-
-const BLUE = '#3D5AF2'
+import { Joystick } from 'lucide-react'
+import PageHeader from '../components/PageHeader'
+import { BLUE } from '../constants'
 
 export default function ManualFlightPage() {
   const navigate = useNavigate()
 
   return (
     <div className="w-full h-full flex flex-col bg-bg-secondary">
-      <div
-        className="relative flex items-center bg-white border-b border-border px-3 flex-shrink-0"
-        style={{ height: 50 }}
-      >
-        <button
-          type="button"
-          onClick={() => navigate('/')}
-          className="w-8 h-8 flex items-center justify-center rounded-btn hover:bg-bg-secondary transition-colors flex-shrink-0"
-        >
-          <ArrowLeft size={18} color="#5A5A5A" />
-        </button>
-        <span
-          className="absolute inset-0 flex items-center justify-center font-bold text-title pointer-events-none"
-          style={{ fontSize: 14 }}
-        >
-          Manual Flight
-        </span>
-      </div>
+      <PageHeader title="Manual Flight" onBack={() => navigate('/')} />
 
       <div className="flex-1 flex items-center justify-center px-6">
         <div className="text-center">

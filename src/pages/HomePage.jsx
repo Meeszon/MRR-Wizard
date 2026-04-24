@@ -3,9 +3,7 @@ import { Plus, FolderOpen, Play, History, Joystick } from 'lucide-react'
 import logo from '../assets/logo.png'
 import { useMissions } from '../hooks/useMissions'
 import { useWizard } from '../hooks/useWizard'
-
-const BLUE = '#3D5AF2'
-const DARK = '#23262F'
+import { BLUE, DARK, GREEN } from '../constants'
 
 const DRONE_CONNECTED = true
 const DRONE_BATTERY = 65
@@ -43,7 +41,7 @@ export default function HomePage() {
                 width: '6px',
                 height: '6px',
                 borderRadius: '50%',
-                background: DRONE_CONNECTED ? '#22C55E' : '#CBCBCB',
+                background: DRONE_CONNECTED ? GREEN : '#CBCBCB',
                 flexShrink: 0,
               }}
             />
@@ -64,7 +62,7 @@ export default function HomePage() {
                     width={Math.round((DRONE_BATTERY / 100) * 11)}
                     height="5"
                     rx="0.5"
-                    fill={DRONE_BATTERY <= 20 ? '#E0515F' : '#22C55E'}
+                    fill={DRONE_BATTERY <= 20 ? '#E0515F' : GREEN}
                   />
                 </svg>
                 <span style={{ fontSize: '11px', color: '#888', fontWeight: 500 }}>
@@ -81,7 +79,6 @@ export default function HomePage() {
         <div className="flex gap-2.5 w-full max-w-[560px]" style={{ height: '210px' }}>
           {/* Left column: 3 secondary buttons */}
           <div className="flex flex-col gap-2.5" style={{ width: '168px' }}>
-            {/* Manage Missions */}
             <button
               type="button"
               onClick={() => navigate('/missions')}
@@ -117,7 +114,6 @@ export default function HomePage() {
               </span>
             </button>
 
-            {/* Flightlog */}
             <button
               type="button"
               onClick={() => navigate('/flightlog')}
@@ -135,7 +131,6 @@ export default function HomePage() {
               </span>
             </button>
 
-            {/* Manual Flight */}
             <button
               type="button"
               onClick={() => navigate('/manual-flight')}
@@ -169,7 +164,6 @@ export default function HomePage() {
                 boxShadow: '0 3px 14px rgba(61,90,242,0.28)',
               }}
             >
-              {/* Decorative arc */}
               <svg
                 aria-hidden="true"
                 style={{ position: 'absolute', bottom: '-20px', right: '-20px', opacity: 0.12 }}
@@ -226,7 +220,6 @@ export default function HomePage() {
                 boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
               }}
             >
-              {/* Decorative arc */}
               <svg
                 aria-hidden="true"
                 style={{ position: 'absolute', bottom: '-20px', right: '-20px', opacity: 0.07 }}
