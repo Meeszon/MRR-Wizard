@@ -8,13 +8,15 @@ import React, {
   forwardRef,
   useImperativeHandle,
 } from 'react'
-import Map, { Marker, Source, Layer, NavigationControl } from 'react-map-gl'
+import Map, { Marker, Source, Layer } from 'react-map-gl'
 import mapboxgl from 'mapbox-gl'
 import { distance as turfDistance, midpoint as turfMidpoint, point as turfPoint } from '@turf/turf'
 import { motion } from 'framer-motion'
-import { Home, MapPin, Plus } from 'lucide-react'
+import { Home, Plus, Minus, Check } from 'lucide-react'
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN
+const PRIMARY = '#3D5AF2'
+const GREEN = '#22C55E'
 
 const MissionMap = forwardRef(
   (
@@ -26,6 +28,7 @@ const MissionMap = forwardRef(
       onPolygonChange,
       polygonClosed = false,
       onPolygonClose,
+      onBoundsChange,
       className = '',
     },
     ref,
@@ -36,7 +39,6 @@ const MissionMap = forwardRef(
 
     const mapRef = useRef()
     const isDraggingRef = useRef(false)
-    // Holds coords if geolocation resolves before the map finishes loading
     const pendingCenterRef = useRef(null)
     const mapLoadedRef = useRef(false)
 
@@ -48,8 +50,6 @@ const MissionMap = forwardRef(
 
     // Call getCurrentPosition from a React effect — this is the main browser JS thread,
     // which is the only context where the browser will show a location permission prompt.
-    // Calling it from inside a Mapbox onLoad callback (a Mapbox-internal event) does not
-    // reliably trigger the prompt in all browsers.
     useEffect(() => {
       if (!window.navigator.geolocation) return
       window.navigator.geolocation.getCurrentPosition(
@@ -70,12 +70,28 @@ const MissionMap = forwardRef(
       window.localStorage.setItem('mapStyle', mapStyle)
     }, [mapStyle])
 
-    function handleMapLoad() {
+    function fireBoundsChange(mapInstance) {
+      if (!onBoundsChange || !mapInstance) return
+      const b = mapInstance.getBounds()
+      onBoundsChange({
+        west: b.getWest(),
+        south: b.getSouth(),
+        east: b.getEast(),
+        north: b.getNorth(),
+      })
+    }
+
+    function handleMapLoad(e) {
       mapLoadedRef.current = true
       if (pendingCenterRef.current && mapRef.current) {
         mapRef.current.flyTo({ center: pendingCenterRef.current, zoom: 16, duration: 1500 })
         pendingCenterRef.current = null
       }
+      fireBoundsChange(e.target)
+    }
+
+    function handleMoveEnd(e) {
+      fireBoundsChange(e.target)
     }
 
     const handleMapClick = useCallback(
@@ -171,53 +187,75 @@ const MissionMap = forwardRef(
           antialias={false}
           preserveDrawingBuffer={false}
           failIfMajorPerformanceCaveat={false}
-          onLoad={() => handleMapLoad()}
+          onLoad={(e) => handleMapLoad(e)}
+          onMoveEnd={(e) => handleMoveEnd(e)}
         >
-          <NavigationControl position="bottom-right" showCompass={false} />
-
-          {/* Style toggle — single button showing the OTHER style, sits above +/- controls */}
+          {/* Bottom-right controls: style toggle + zoom in/out */}
           {(() => {
             const nextStyle = mapStyle === 'streets-v11' ? 'satellite-streets-v11' : 'streets-v11'
             return (
-              <div className="absolute z-10" style={{ bottom: 80, right: 10 }}>
+              <div className="absolute z-10 flex flex-col gap-2 bottom-2 right-6 min-[300px]:right-4">
                 <button
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation()
                     setMapStyle(nextStyle)
                   }}
-                  className="overflow-hidden active:scale-95 transition-transform"
-                  style={{
-                    width: 29,
-                    height: 29,
-                    borderRadius: 4,
-                    border: '2px solid rgba(255,255,255,0.9)',
-                    boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
-                    display: 'block',
-                  }}
+                  className="bg-white/95 rounded-btn shadow-md border border-border active:scale-95 transition-transform overflow-hidden"
+                  style={{ width: 44, height: 44 }}
                 >
                   <img
-                    src={`https://api.mapbox.com/styles/v1/mapbox/${nextStyle}/static/5.29,52.13,10/58x58?access_token=${MAPBOX_TOKEN}`}
-                    alt={nextStyle.includes('satellite') ? 'Satelliet' : 'Kaart'}
+                    src={`https://api.mapbox.com/styles/v1/mapbox/${nextStyle}/static/5.29,52.13,10/88x88?access_token=${MAPBOX_TOKEN}`}
+                    alt={nextStyle.includes('satellite') ? 'Satellite' : 'Map'}
                     style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                   />
                 </button>
+                <div className="bg-white/95 rounded-btn shadow-md border border-border overflow-hidden flex flex-col">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      mapRef.current?.zoomIn()
+                    }}
+                    className="flex items-center justify-center active:bg-gray-100 transition-colors"
+                    style={{ width: 44, height: 44 }}
+                  >
+                    <Plus size={18} color="#5A5A5A" strokeWidth={2} />
+                  </button>
+                  <div className="bg-border" style={{ height: 1 }} />
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      mapRef.current?.zoomOut()
+                    }}
+                    className="flex items-center justify-center active:bg-gray-100 transition-colors"
+                    style={{ width: 44, height: 44 }}
+                  >
+                    <Minus size={18} color="#5A5A5A" strokeWidth={2} />
+                  </button>
+                </div>
               </div>
             )
           })()}
 
-          {/* Polygon fill (shown only when closed) */}
+          {/* Polygon fill + stroke (shown only when closed) */}
           {fillData && (
             <Source id="poly-fill" type="geojson" data={fillData}>
               <Layer
                 id="poly-fill-layer"
                 type="fill"
-                paint={{ 'fill-color': '#d4d7e4', 'fill-opacity': 0.4 }}
+                paint={{ 'fill-color': PRIMARY, 'fill-opacity': 0.1 }}
+              />
+              <Layer
+                id="poly-stroke-layer"
+                type="line"
+                paint={{ 'line-color': PRIMARY, 'line-width': 2, 'line-opacity': 0.55 }}
               />
             </Source>
           )}
 
-          {/* White connecting lines while polygon is open (hidden when closed, fill takes over) */}
+          {/* Blue dashed lines while polygon is open */}
           {lineFeatures.length > 0 && (
             <Source
               id="poly-lines"
@@ -227,7 +265,12 @@ const MissionMap = forwardRef(
               <Layer
                 id="poly-lines-layer"
                 type="line"
-                paint={{ 'line-color': 'rgba(255, 255, 255, 0.8)', 'line-width': 2 }}
+                paint={{
+                  'line-color': PRIMARY,
+                  'line-width': 2,
+                  'line-opacity': 0.65,
+                  'line-dasharray': [4, 3],
+                }}
               />
             </Source>
           )}
@@ -238,21 +281,54 @@ const MissionMap = forwardRef(
               <button
                 type="button"
                 className="relative group"
+                style={{ cursor: 'pointer' }}
                 onClick={(e) => {
                   e.stopPropagation()
                   handleInsertMidpoint(afterIndex)
                 }}
               >
-                <div className="absolute -inset-4 cursor-pointer" />
-                <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-white px-2 py-0.5 rounded-full shadow text-xs text-gray-600 pointer-events-none whitespace-nowrap group-hover:-translate-y-1 transition-transform duration-200">
+                {/* Extended touch target */}
+                <div className="absolute -inset-4" />
+
+                {/* Distance pill */}
+                <div
+                  className="absolute pointer-events-none whitespace-nowrap group-hover:-translate-y-0.5 transition-transform duration-150"
+                  style={{
+                    bottom: '100%',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    marginBottom: 6,
+                    background: 'rgba(23,25,35,0.80)',
+                    backdropFilter: 'blur(6px)',
+                    WebkitBackdropFilter: 'blur(6px)',
+                    color: 'white',
+                    fontSize: 10,
+                    fontWeight: 700,
+                    padding: '2px 7px',
+                    borderRadius: 20,
+                    letterSpacing: '0.03em',
+                  }}
+                >
                   {dist}m
                 </div>
+
+                {/* Insert button */}
                 <motion.div
-                  className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md cursor-pointer border border-gray-200 group-hover:bg-blue-50 group-hover:shadow-lg transition-all duration-200"
-                  whileHover={{ scale: 1.15 }}
-                  whileTap={{ scale: 0.95 }}
+                  style={{
+                    width: 22,
+                    height: 22,
+                    borderRadius: '50%',
+                    background: 'white',
+                    border: `1.5px solid ${PRIMARY}`,
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.18)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                  whileHover={{ scale: 1.25 }}
+                  whileTap={{ scale: 0.9 }}
                 >
-                  <Plus size={20} className="text-blue-500" />
+                  <Plus size={11} color={PRIMARY} strokeWidth={2.5} />
                 </motion.div>
               </button>
             </Marker>
@@ -289,6 +365,7 @@ const MissionMap = forwardRef(
                     if (isCloseable) onPolygonClose?.()
                   }}
                 >
+                  {/* 44×44 touch target */}
                   <div
                     style={{
                       width: 44,
@@ -299,23 +376,57 @@ const MissionMap = forwardRef(
                       cursor: isCloseable ? 'pointer' : isDraggableVertex ? 'grab' : 'default',
                     }}
                   >
-                    <motion.div
-                      className={`rounded-full flex items-center justify-center shadow-lg ${
-                        isCloseable ? 'bg-[#2563eb] w-12 h-12' : 'bg-white w-10 h-10'
-                      }`}
-                      animate={{
-                        scale: [1, 1.1, 1],
-                        opacity: [0.7, 1, 0.7],
-                      }}
-                      transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-                      whileHover={{ scale: 1.1, transition: { duration: 0.2 } }}
-                    >
-                      <MapPin
-                        size={20}
-                        strokeWidth={2}
-                        className={isCloseable ? 'text-white' : 'text-gray-700'}
+                    {isCloseable ? (
+                      /* First vertex in closeable state — green with checkmark + pulsing ring */
+                      <div style={{ position: 'relative', width: 26, height: 26 }}>
+                        {/* Pulsing ring */}
+                        <motion.div
+                          style={{
+                            position: 'absolute',
+                            top: -9,
+                            left: -9,
+                            width: 44,
+                            height: 44,
+                            borderRadius: '50%',
+                            border: `2px solid ${GREEN}`,
+                            pointerEvents: 'none',
+                          }}
+                          animate={{ opacity: [0, 0.65, 0], scale: [0.75, 1.1, 0.75] }}
+                          transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
+                        />
+                        <motion.div
+                          style={{
+                            width: 26,
+                            height: 26,
+                            borderRadius: '50%',
+                            background: GREEN,
+                            border: '2.5px solid white',
+                            boxShadow: '0 2px 12px rgba(34,197,94,0.5)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                          }}
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                        >
+                          <Check size={12} color="white" strokeWidth={3} />
+                        </motion.div>
+                      </div>
+                    ) : (
+                      /* Normal vertex — solid blue circle with white border */
+                      <motion.div
+                        style={{
+                          width: 18,
+                          height: 18,
+                          borderRadius: '50%',
+                          background: PRIMARY,
+                          border: '2.5px solid white',
+                          boxShadow: '0 2px 8px rgba(0,0,0,0.28)',
+                        }}
+                        whileHover={isDraggableVertex ? { scale: 1.25 } : undefined}
+                        whileTap={isDraggableVertex ? { scale: 0.9 } : undefined}
                       />
-                    </motion.div>
+                    )}
                   </div>
                 </Marker>
               )
@@ -338,6 +449,7 @@ const MissionMap = forwardRef(
                 onHomePointChange?.({ lat: e.lngLat.lat, lng: e.lngLat.lng })
               }}
             >
+              {/* 44×44 touch target */}
               <div
                 style={{
                   width: 44,
@@ -349,10 +461,21 @@ const MissionMap = forwardRef(
                 }}
               >
                 <motion.div
-                  className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg"
-                  whileHover={{ scale: 1.1, transition: { duration: 0.2 } }}
+                  style={{
+                    width: 34,
+                    height: 34,
+                    borderRadius: '50%',
+                    background: PRIMARY,
+                    border: '3px solid white',
+                    boxShadow: '0 3px 14px rgba(61,90,242,0.45), 0 1px 4px rgba(0,0,0,0.18)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                  whileHover={{ scale: 1.1, transition: { duration: 0.15 } }}
+                  whileTap={{ scale: 0.93 }}
                 >
-                  <Home size={20} strokeWidth={2} className="text-gray-700" />
+                  <Home size={15} strokeWidth={2.5} color="white" />
                 </motion.div>
               </div>
             </Marker>

@@ -1,7 +1,7 @@
 /* global window */
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import {
   X,
   Map,
@@ -17,6 +17,8 @@ import {
   Layers,
   Pencil,
   Mountain,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react'
 import * as turf from '@turf/turf'
 import MissionMap from '../components/MissionMap'
@@ -34,7 +36,13 @@ export default function EditMissionPage() {
   const { wizard, updateWizard } = useWizard()
   const [activeTab, setActiveTab] = useState('map')
   const [undoStack, setUndoStack] = useState([])
+  const [mapBounds, setMapBounds] = useState(null)
+  const [metricsVisible, setMetricsVisible] = useState(false)
   const missionMapRef = useRef()
+
+  useEffect(() => {
+    if (wizard.polygonClosed) setMetricsVisible(true)
+  }, [wizard.polygonClosed])
 
   if (!wizard.editingMission) {
     return <Navigate to="/missions" replace />
@@ -42,6 +50,14 @@ export default function EditMissionPage() {
 
   const metrics = calcMetrics(wizard.quality, wizard.highestPointMeters)
   const polygon = wizard.areaPolygon ?? []
+
+  const homeInView =
+    wizard.homePoint &&
+    mapBounds &&
+    wizard.homePoint.lat >= mapBounds.south &&
+    wizard.homePoint.lat <= mapBounds.north &&
+    wizard.homePoint.lng >= mapBounds.west &&
+    wizard.homePoint.lng <= mapBounds.east
 
   function pushUndo() {
     setUndoStack((prev) => [
@@ -119,7 +135,7 @@ export default function EditMissionPage() {
     <div className="w-full h-full flex flex-col overflow-hidden bg-bg-secondary">
       {/* ── Single top bar: Cancel | Tabs | Save ── */}
       <div
-        className="relative flex items-center bg-white border-b border-border px-3 flex-shrink-0"
+        className="relative flex items-center bg-white border-b border-border px-6 min-[300px]:px-4 flex-shrink-0"
         style={{ height: 52 }}
       >
         {/* Cancel */}
@@ -176,7 +192,7 @@ export default function EditMissionPage() {
           }}
         >
           <Check size={14} color="white" strokeWidth={3} />
-          <span style={{ fontSize: 13, fontWeight: 700, color: 'white' }}>Save</span>
+          <span style={{ fontSize: 13, fontWeight: 700, color: 'white' }}>Save Mission</span>
         </button>
       </div>
 
@@ -191,23 +207,27 @@ export default function EditMissionPage() {
           {/* ── Map panel ── */}
           <div className="relative h-full" style={{ width: '50%' }}>
             {/* Map overlay buttons — top right */}
-            <div className="absolute top-3 right-3 z-10 flex gap-1.5">
-              <button
-                type="button"
-                onClick={handleGoHome}
-                className="bg-white/95 rounded-btn shadow-md border border-border p-2 active:scale-95 transition-transform"
-                title="Go to home point"
-              >
-                <Locate size={13} color="#5A5A5A" />
-              </button>
+            <div className="absolute top-3 right-6 min-[300px]:right-4 z-10 flex gap-2">
+              {!homeInView && (
+                <button
+                  type="button"
+                  onClick={handleGoHome}
+                  className="bg-white/95 rounded-btn shadow-md border border-border active:scale-95 transition-transform flex items-center justify-center"
+                  style={{ width: 44, height: 44 }}
+                  title="Go to home point"
+                >
+                  <Locate size={18} color="#5A5A5A" />
+                </button>
+              )}
               {undoStack.length > 0 && (
                 <button
                   type="button"
                   onClick={handleUndo}
-                  className="bg-white/95 rounded-btn shadow-md border border-border p-2 active:scale-95 transition-transform"
+                  className="bg-white/95 rounded-btn shadow-md border border-border active:scale-95 transition-transform flex items-center justify-center"
+                  style={{ width: 44, height: 44 }}
                   title="Undo last action"
                 >
-                  <Undo2 size={13} color="#5A5A5A" />
+                  <Undo2 size={18} color="#5A5A5A" />
                 </button>
               )}
             </div>
@@ -221,29 +241,88 @@ export default function EditMissionPage() {
               onPolygonChange={(pts) => handlePolygonChange(pts)}
               polygonClosed={wizard.polygonClosed}
               onPolygonClose={() => handlePolygonClose()}
+              onBoundsChange={setMapBounds}
               className="absolute inset-0"
             />
 
-            {/* Floating metrics strip — center bottom */}
-            <div className="absolute bottom-3 left-0 right-0 flex justify-center z-10 pointer-events-none">
-              <div className="inline-flex items-stretch bg-white/95 rounded-btn border border-border shadow-lg overflow-hidden">
-                <MetricPill
-                  icon={<ArrowUp size={11} color={BLUE} />}
-                  value={`${metrics.flightHeight}m`}
-                />
-                <div className="w-px bg-border" />
-                <MetricPill
-                  icon={<Clock size={11} color={BLUE} />}
-                  value={`${metrics.flightTime} min`}
-                />
-                <div className="w-px bg-border" />
-                <MetricPill
-                  icon={<Battery size={11} color={metrics.feasible ? BLUE : RED} />}
-                  value={`-${metrics.batteryNeed}%`}
-                  valueColor={metrics.feasible ? undefined : RED}
-                />
-              </div>
-            </div>
+            {/* Metrics card */}
+            <AnimatePresence>
+              {wizard.polygonClosed && metricsVisible && (
+                <motion.div
+                  className="absolute z-10"
+                  style={{ top: 12, left: 'calc(12px + env(safe-area-inset-left, 0px))' }}
+                  initial={{ x: -200, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: -200, opacity: 0 }}
+                  transition={{ type: 'spring', stiffness: 380, damping: 32 }}
+                >
+                  <div
+                    style={{
+                      background: 'white',
+                      borderRadius: 6,
+                      border: '1px solid #E4E4E4',
+                      boxShadow: '0 1px 6px rgba(0,0,0,0.08)',
+                      overflow: 'hidden',
+                      display: 'flex',
+                    }}
+                  >
+                    {/* Three metric columns */}
+                    <div style={{ display: 'flex' }}>
+                      <MapMetricCell value={`${metrics.flightHeight}m`} label="altitude" />
+                      <div style={{ width: 1, background: '#F0F0F0', margin: '6px 0' }} />
+                      <MapMetricCell value={`${metrics.flightTime} min`} label="flight" />
+                      <div style={{ width: 1, background: '#F0F0F0', margin: '6px 0' }} />
+                      <MapMetricCell
+                        value={`−${metrics.batteryNeed}%`}
+                        label="battery"
+                        valueColor={metrics.feasible ? undefined : RED}
+                      />
+                    </div>
+
+                    {/* Collapse strip */}
+                    <button
+                      type="button"
+                      onClick={() => setMetricsVisible(false)}
+                      className="flex items-center justify-center active:bg-gray-50 transition-colors"
+                      style={{ width: 24, borderLeft: '1px solid #F0F0F0', flexShrink: 0 }}
+                    >
+                      <ChevronLeft size={11} color="#C8C8C8" strokeWidth={2} />
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Expand tab — peeks from left edge when collapsed */}
+            <AnimatePresence>
+              {wizard.polygonClosed && !metricsVisible && (
+                <motion.button
+                  type="button"
+                  onClick={() => setMetricsVisible(true)}
+                  className="absolute z-10 active:opacity-70 transition-opacity"
+                  style={{ top: 12, left: 'env(safe-area-inset-left, 0px)' }}
+                  initial={{ x: -38, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: -38, opacity: 0 }}
+                  transition={{ type: 'spring', stiffness: 380, damping: 32 }}
+                >
+                  <div
+                    style={{
+                      background: 'white',
+                      borderRadius: '0 6px 6px 0',
+                      border: '1px solid #E4E4E4',
+                      borderLeft: 'none',
+                      boxShadow: '2px 1px 6px rgba(0,0,0,0.07)',
+                      padding: '9px 8px 9px 6px',
+                      display: 'flex',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <ChevronRight size={13} color={BLUE} strokeWidth={2.5} />
+                  </div>
+                </motion.button>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* ── Settings panel ── */}
@@ -265,24 +344,34 @@ export default function EditMissionPage() {
                 </div>
               )}
 
-              {/* Metrics cards */}
-              <div className="grid grid-cols-3 gap-2 mb-3">
-                <MetricCard
-                  icon={<ArrowUp size={14} color={BLUE} />}
-                  value={`${metrics.flightHeight}m`}
-                  label="altitude"
-                />
-                <MetricCard
-                  icon={<Clock size={14} color={BLUE} />}
-                  value={`${metrics.flightTime} min`}
-                  label="flight time"
-                />
-                <MetricCard
-                  icon={<Battery size={14} color={metrics.feasible ? BLUE : RED} />}
-                  value={`-${metrics.batteryNeed}%`}
-                  label={`of ${CURRENT_BATTERY}%`}
-                  valueColor={metrics.feasible ? undefined : RED}
-                />
+              {/* Metrics strip */}
+              <div
+                className="rounded-card mb-3 overflow-hidden"
+                style={{
+                  background: 'linear-gradient(135deg, #ECEFFE 0%, #F5F7FF 100%)',
+                  border: '1px solid rgba(61,90,242,0.15)',
+                }}
+              >
+                <div className="flex">
+                  <MetricCell
+                    icon={<ArrowUp size={14} color={BLUE} />}
+                    value={`${metrics.flightHeight}m`}
+                    label="altitude"
+                  />
+                  <div style={{ width: 1, background: 'rgba(61,90,242,0.12)', margin: '10px 0' }} />
+                  <MetricCell
+                    icon={<Clock size={14} color={BLUE} />}
+                    value={`${metrics.flightTime} min`}
+                    label="flight time"
+                  />
+                  <div style={{ width: 1, background: 'rgba(61,90,242,0.12)', margin: '10px 0' }} />
+                  <MetricCell
+                    icon={<Battery size={14} color={metrics.feasible ? BLUE : RED} />}
+                    value={`-${metrics.batteryNeed}%`}
+                    label={`of ${CURRENT_BATTERY}%`}
+                    valueColor={metrics.feasible ? undefined : RED}
+                  />
+                </div>
               </div>
 
               {/* Settings list */}
@@ -393,25 +482,64 @@ export default function EditMissionPage() {
   )
 }
 
-function MetricPill({ icon, value, valueColor }) {
+function MapMetricCell({ value, label, valueColor }) {
   return (
-    <div className="flex items-center gap-1 px-2.5 py-1.5">
-      {icon}
-      <span className="font-bold" style={{ fontSize: 12, color: valueColor || '#23262F' }}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        padding: '5px 8px',
+        gap: 1,
+        minWidth: 40,
+      }}
+    >
+      <span
+        style={{
+          fontSize: 8,
+          fontWeight: 700,
+          color: '#C4C4C4',
+          letterSpacing: '0.07em',
+          textTransform: 'uppercase',
+          lineHeight: 1,
+        }}
+      >
+        {label}
+      </span>
+      <span
+        style={{
+          fontSize: 13,
+          fontWeight: 800,
+          color: valueColor || '#23262F',
+          letterSpacing: '-0.02em',
+          lineHeight: 1.2,
+        }}
+      >
         {value}
       </span>
     </div>
   )
 }
 
-function MetricCard({ icon, value, label, valueColor }) {
+function MetricCell({ icon, value, label, valueColor }) {
   return (
-    <div className="bg-white rounded-card border border-border flex flex-col items-center py-2.5 gap-0.5">
+    <div className="flex-1 flex flex-col items-center py-3 gap-0.5">
       {icon}
-      <span className="font-bold" style={{ fontSize: 15, color: valueColor || '#23262F' }}>
+      <span
+        style={{
+          fontSize: 17,
+          fontWeight: 800,
+          color: valueColor || '#23262F',
+          letterSpacing: '-0.02em',
+          lineHeight: 1.25,
+          marginTop: 2,
+        }}
+      >
         {value}
       </span>
-      <span style={{ fontSize: 10, color: '#9A9A9A' }}>{label}</span>
+      <span style={{ fontSize: 10, fontWeight: 500, color: '#9A9AB0', letterSpacing: '0.04em' }}>
+        {label}
+      </span>
     </div>
   )
 }

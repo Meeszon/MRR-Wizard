@@ -85,3 +85,8 @@ input[type='range']::-moz-range-thumb {
 .mapboxgl-ctrl-attrib {
   display: none !important;
 }
+
+/* Mapbox canvas is inline by default; block removes the ~4px descender gap */
+.mapboxgl-canvas {
+  display: block;
+}
