@@ -1,7 +1,7 @@
 import { useNavigate, useLocation } from 'react-router-dom'
 import { ArrowLeft, Check, Info } from 'lucide-react'
-import { useAppPrefs } from '../../hooks/useAppPrefs'
-import { useWizard } from '../../hooks/useWizard'
+import { useAppPrefs } from '../hooks/useAppPrefs'
+import { useWizard } from '../hooks/useWizard'
 
 const TOTAL_STEPS = 4
 

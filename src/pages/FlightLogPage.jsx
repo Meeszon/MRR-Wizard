@@ -1,10 +1,9 @@
 import { useNavigate } from 'react-router-dom'
-import { ArrowLeft, CheckCircle2, CalendarCheck, Clock, Image, BarChart2 } from 'lucide-react'
+import { CheckCircle2, CalendarCheck, Clock, Image, BarChart2 } from 'lucide-react'
+import PageHeader from '../components/PageHeader'
+import EmptyState from '../components/EmptyState'
 import { useMissions } from '../hooks/useMissions'
-import { calcMetrics } from '../constants'
-
-const GREEN = '#22C55E'
-const BLUE = '#3D5AF2'
+import { calcMetrics, BLUE, GREEN } from '../constants'
 
 function formatDate(iso) {
   return new Date(iso).toLocaleDateString('en-GB', {
@@ -18,45 +17,28 @@ export default function FlightLogPage() {
   const navigate = useNavigate()
   const { completedMissions } = useMissions()
 
+  const count = completedMissions.length
+
   return (
     <div className="w-full h-full flex flex-col bg-bg-secondary">
-      {/* Header */}
-      <div
-        className="relative flex items-center bg-white border-b border-border px-4 flex-shrink-0"
-        style={{ height: '50px' }}
-      >
-        <button
-          type="button"
-          onClick={() => navigate('/')}
-          className="w-8 h-8 flex items-center justify-center rounded-btn hover:bg-bg-secondary transition-colors flex-shrink-0"
-        >
-          <ArrowLeft size={20} color="#5A5A5A" />
-        </button>
-        <span
-          className="absolute inset-0 flex items-center justify-center font-bold text-title pointer-events-none"
-          style={{ fontSize: '15px' }}
-        >
-          Flight Log
-        </span>
-        {completedMissions.length > 0 && (
-          <span className="ml-auto font-semibold" style={{ fontSize: '12px', color: '#AAAAAA' }}>
-            {completedMissions.length} {completedMissions.length === 1 ? 'flight' : 'flights'}
-          </span>
-        )}
-      </div>
+      <PageHeader
+        title="Flight Log"
+        onBack={() => navigate('/')}
+        right={
+          count > 0 && (
+            <span style={{ fontSize: 12, fontWeight: 600, color: '#AAAAAA' }}>
+              {count} {count === 1 ? 'flight' : 'flights'}
+            </span>
+          )
+        }
+      />
 
-      {/* Content */}
       <div className="flex-1 overflow-y-auto px-8 py-4 flex flex-col gap-2.5 min-h-0">
-        {completedMissions.length === 0 ? (
-          <div className="flex-1 flex flex-col items-center justify-center gap-3">
-            <div
-              className="flex items-center justify-center rounded-card"
-              style={{ width: '52px', height: '52px', background: '#EBEBEB' }}
-            >
-              <CheckCircle2 size={22} color="#AAAAAA" strokeWidth={1.75} />
-            </div>
-            <p style={{ fontSize: '13px', color: '#888' }}>No completed flights yet</p>
-          </div>
+        {count === 0 ? (
+          <EmptyState
+            icon={<CheckCircle2 size={22} color="#AAAAAA" strokeWidth={1.75} />}
+            message="No completed flights yet"
+          />
         ) : (
           <>
             {completedMissions.map((mission) => {
@@ -70,7 +52,6 @@ export default function FlightLogPage() {
                   className="bg-white rounded-card border border-border flex items-center gap-3 w-full max-w-[560px] mx-auto"
                   style={{ padding: '12px 14px', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}
                 >
-                  {/* Info — inline check icon matches active missions pattern */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5 min-w-0">
                       <CheckCircle2
@@ -101,7 +82,6 @@ export default function FlightLogPage() {
                     </div>
                   </div>
 
-                  {/* Results button */}
                   <button
                     type="button"
                     className="flex items-center gap-1.5 rounded-btn active:scale-95 transition-transform select-none flex-shrink-0"
@@ -121,7 +101,6 @@ export default function FlightLogPage() {
               )
             })}
 
-            {/* Load more placeholder */}
             <div className="w-full max-w-[560px] mx-auto pt-1 pb-2">
               <button
                 type="button"

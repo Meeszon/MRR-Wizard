@@ -1,18 +1,32 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { ArrowLeft, Clock, Battery, Info, ChevronUp, Settings, Play } from 'lucide-react'
+import { Clock, Battery, Info, ChevronUp, Settings, Play } from 'lucide-react'
 import MapPlaceholder from '../components/MapPlaceholder'
+import PageHeader from '../components/PageHeader'
 import { useMissions } from '../hooks/useMissions'
 import { useWizard } from '../hooks/useWizard'
-import { calcMetrics } from '../constants'
+import { calcMetrics, BLUE, RED, GREEN } from '../constants'
 import { mockDrones } from '../data/mockDrones'
-
-const BLUE = '#3D5AF2'
-const RED = '#E0515F'
-const GREEN = '#22C55E'
 
 const connectedDrones = mockDrones.filter((d) => d.connected)
 const isSingleDrone = connectedDrones.length === 1
+
+function SectionLabel({ children }) {
+  return (
+    <div
+      style={{
+        fontSize: 11,
+        fontWeight: 700,
+        color: '#ABABAB',
+        textTransform: 'uppercase',
+        letterSpacing: '0.08em',
+        marginBottom: 6,
+      }}
+    >
+      {children}
+    </div>
+  )
+}
 
 export default function StartFlightPage() {
   const navigate = useNavigate()
@@ -61,76 +75,51 @@ export default function StartFlightPage() {
           const container = scrollRef.current
           const containerRect = container.getBoundingClientRect()
           const elRect = el.getBoundingClientRect()
-          const targetScroll = elRect.top - containerRect.top + container.scrollTop
-          container.scrollTo({ top: targetScroll, behavior: 'smooth' })
+          container.scrollTo({
+            top: elRect.top - containerRect.top + container.scrollTop,
+            behavior: 'smooth',
+          })
         }
       }, 50)
     }
   }
 
+  const startButton = (
+    <button
+      type="button"
+      onClick={handleStart}
+      disabled={!canStart}
+      className="flex items-center gap-1.5 rounded-btn active:scale-95 z-10"
+      style={{
+        padding: '7px 14px',
+        background: canStart ? BLUE : '#EBEBEB',
+        cursor: canStart ? 'pointer' : 'not-allowed',
+        boxShadow: canStart ? '0 2px 8px rgba(61,90,242,0.25)' : 'none',
+        transition: 'background 0.2s, box-shadow 0.2s',
+      }}
+    >
+      <Play
+        size={13}
+        color={canStart ? 'white' : '#B8B8B8'}
+        fill={canStart ? 'white' : '#B8B8B8'}
+        strokeWidth={0}
+      />
+      <span style={{ fontSize: 13, fontWeight: 700, color: canStart ? 'white' : '#B8B8B8' }}>
+        Start Flight
+      </span>
+    </button>
+  )
+
   return (
     <div className="w-full h-full flex flex-col bg-bg-secondary">
-      {/* Header */}
-      <div
-        className="relative flex items-center bg-white border-b border-border px-3 flex-shrink-0"
-        style={{ height: 50 }}
-      >
-        <button
-          type="button"
-          onClick={() => navigate('/')}
-          className="w-8 h-8 flex items-center justify-center rounded-btn hover:bg-bg-secondary transition-colors flex-shrink-0"
-        >
-          <ArrowLeft size={18} color="#5A5A5A" />
-        </button>
-        <span
-          className="absolute inset-0 flex items-center justify-center font-bold text-title pointer-events-none"
-          style={{ fontSize: 14 }}
-        >
-          Select a Mission
-        </span>
-        <button
-          type="button"
-          onClick={handleStart}
-          disabled={!canStart}
-          className="ml-auto flex items-center gap-1.5 rounded-btn active:scale-95 z-10"
-          style={{
-            padding: '7px 14px',
-            background: canStart ? BLUE : '#EBEBEB',
-            cursor: canStart ? 'pointer' : 'not-allowed',
-            boxShadow: canStart ? '0 2px 8px rgba(61,90,242,0.25)' : 'none',
-            transition: 'background 0.2s, box-shadow 0.2s',
-          }}
-        >
-          <Play
-            size={13}
-            color={canStart ? 'white' : '#B8B8B8'}
-            fill={canStart ? 'white' : '#B8B8B8'}
-            strokeWidth={0}
-          />
-          <span style={{ fontSize: 13, fontWeight: 700, color: canStart ? 'white' : '#B8B8B8' }}>
-            Start Flight
-          </span>
-        </button>
-      </div>
+      <PageHeader title="Select a Mission" onBack={() => navigate('/')} right={startButton} />
 
-      {/* Scrollable body */}
       <div ref={scrollRef} className="flex-1 overflow-y-auto min-h-0 flex flex-col">
         {/* Multi-drone selector */}
         {!isSingleDrone && (
           <div className="flex-shrink-0 bg-white border-b border-border px-3 py-2">
             <div className="w-full max-w-[560px] mx-auto">
-              <div
-                style={{
-                  fontSize: 11,
-                  fontWeight: 700,
-                  color: '#ABABAB',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.08em',
-                  marginBottom: 6,
-                }}
-              >
-                Drone
-              </div>
+              <SectionLabel>Drone</SectionLabel>
               <div className="flex gap-2">
                 {mockDrones.map((drone) => {
                   const sel = drone.id === selectedDroneId
@@ -207,18 +196,7 @@ export default function StartFlightPage() {
         {/* Missions section */}
         <div className="px-3 py-2.5">
           <div className="w-full max-w-[560px] mx-auto">
-            <div
-              style={{
-                fontSize: 11,
-                fontWeight: 700,
-                color: '#ABABAB',
-                textTransform: 'uppercase',
-                letterSpacing: '0.08em',
-                marginBottom: 6,
-              }}
-            >
-              Mission
-            </div>
+            <SectionLabel>Mission</SectionLabel>
 
             <div className="flex flex-col gap-1.5">
               {missions.map((mission) => {
@@ -241,7 +219,6 @@ export default function StartFlightPage() {
                       background: 'white',
                     }}
                   >
-                    {/* Main row */}
                     <div className="flex items-stretch">
                       <button
                         type="button"
@@ -310,7 +287,6 @@ export default function StartFlightPage() {
                       </button>
                     </div>
 
-                    {/* Expanded detail panel */}
                     {detailOpen && (
                       <div
                         className="relative overflow-hidden"
