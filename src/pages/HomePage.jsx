@@ -24,7 +24,7 @@ export default function HomePage() {
     <div className="w-full h-full flex flex-col bg-bg-secondary">
       {/* Header */}
       <div
-        className="flex items-center bg-white border-b border-border px-4 flex-shrink-0"
+        className="flex items-center bg-white border-b border-border px-6 flex-shrink-0"
         style={{ height: '50px' }}
       >
         <img
