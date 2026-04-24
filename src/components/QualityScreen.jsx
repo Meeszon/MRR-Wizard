@@ -1,3 +1,4 @@
+import React from 'react'
 import { ArrowLeft, ArrowRight, Clock, Battery, Camera } from 'lucide-react'
 import BigSlider from './BigSlider'
 import { BLUE, RED, CURRENT_BATTERY, calcMetrics } from '../constants'

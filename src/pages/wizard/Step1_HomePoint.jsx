@@ -1,9 +1,9 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Drone, Home, ArrowRight, Check, Info } from 'lucide-react'
 import MapPlaceholder from '../../components/MapPlaceholder'
 import WizardBar from '../../components/WizardBar'
-import { useAppPrefs } from '../../hooks/useAppPrefs'
+import useAppPrefs from '../../hooks/useAppPrefs'
 
 export default function Step1HomePoint() {
   const navigate = useNavigate()
@@ -15,9 +15,13 @@ export default function Step1HomePoint() {
       <WizardBar />
 
       <div className="flex-1 relative min-h-0">
-        <div className="absolute inset-0 cursor-crosshair" onClick={() => setPlaced(true)}>
+        <button
+          type="button"
+          className="absolute inset-0 cursor-crosshair"
+          onClick={() => setPlaced(true)}
+        >
           <MapPlaceholder mode="location" className="absolute inset-0" />
-        </div>
+        </button>
 
         {placed && (
           <div className="absolute top-3 right-3">
@@ -36,21 +40,14 @@ export default function Step1HomePoint() {
           </div>
         )}
 
-        {hintsVisible && !placed && (
-          <div className="absolute bottom-16 left-3 right-3 flex justify-center pointer-events-none">
-            <div className="bg-white/90 rounded-btn px-3 py-1.5 flex items-center gap-1.5 shadow-sm">
-              <Info size={12} color="#5A5A5A" className="flex-shrink-0" />
-              <span className="text-body font-medium">The drone takes off and returns here.</span>
-            </div>
-          </div>
-        )}
-
-        {hintsVisible && placed && (
+        {hintsVisible && (
           <div className="absolute bottom-16 left-3 right-3 flex justify-center pointer-events-none">
             <div className="bg-white/90 rounded-btn px-3 py-1.5 flex items-center gap-1.5 shadow-sm">
               <Info size={12} color="#5A5A5A" className="flex-shrink-0" />
               <span className="text-body font-medium">
-                Drag the pin to the exact takeoff and landing location.
+                {placed
+                  ? 'Drag the pin to the exact takeoff and landing location.'
+                  : 'The drone takes off and returns here.'}
               </span>
             </div>
           </div>

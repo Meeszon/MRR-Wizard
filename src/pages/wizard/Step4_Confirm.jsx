@@ -1,3 +1,4 @@
+import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   Check,
@@ -11,11 +12,11 @@ import {
   RotateCcw,
 } from 'lucide-react'
 import WizardBar from '../../components/WizardBar'
-import MapPlaceholder from '../../components/MapPlaceholder'
-import { useWizard } from '../../hooks/useWizard'
-import { useMissions } from '../../hooks/useMissions'
+import MissionMap from '../../components/MissionMap'
+import useWizard from '../../hooks/useWizard'
+import useMissions from '../../hooks/useMissions'
 import { calcMetrics } from '../../constants'
-import { qualityLabel } from '../../utils/qualityUtils'
+import qualityLabel from '../../utils/qualityUtils'
 import { buildMission, buildMissionUpdate } from '../../services/missionService'
 
 function InfoRow({ icon, label, value, error }) {
@@ -67,11 +68,17 @@ export default function Step4Confirm() {
       <div className="flex flex-1 min-h-0">
         {/* Map — 55% */}
         <div className="relative" style={{ width: '55%' }}>
-          <MapPlaceholder mode="confirm" className="absolute inset-0" />
+          <MissionMap
+            mode="readonly"
+            homePoint={wizard.homePoint}
+            polygon={wizard.areaPolygon ?? []}
+            polygonClosed={wizard.polygonClosed}
+            className="absolute inset-0"
+          />
           {!isEdit && (
             <button
               type="button"
-              onClick={() => navigate('/wizard/step2')}
+              onClick={() => navigate('/wizard/step1')}
               className="absolute bottom-3 left-3 flex items-center gap-1.5 bg-white/90 rounded-btn shadow border border-border active:scale-95 transition-transform"
               style={{ padding: '6px 10px' }}
             >
@@ -138,29 +145,20 @@ export default function Step4Confirm() {
 
           {/* Action buttons */}
           <div className="flex-shrink-0 px-6 pt-2 pb-3 flex flex-col gap-2">
-            {canSubmit ? (
-              <button
-                type="button"
-                onClick={handleSubmit}
-                className="w-full max-w-[560px] mx-auto rounded-btn bg-primary flex items-center justify-center gap-2 shadow active:scale-[0.98] transition-transform"
-                style={{ height: 44 }}
+            <button
+              type="button"
+              onClick={canSubmit ? handleSubmit : undefined}
+              disabled={!canSubmit}
+              className={`w-full max-w-[560px] mx-auto rounded-btn flex items-center justify-center gap-2 ${canSubmit ? 'bg-primary shadow active:scale-[0.98] transition-transform' : ''}`}
+              style={{ height: 44, background: canSubmit ? undefined : '#E0E0E0' }}
+            >
+              <Check size={17} color={canSubmit ? 'white' : '#AAAAAA'} strokeWidth={3} />
+              <span
+                style={{ fontSize: 14, fontWeight: 700, color: canSubmit ? 'white' : '#AAAAAA' }}
               >
-                <Check size={17} color="white" strokeWidth={3} />
-                <span style={{ fontSize: 14, fontWeight: 700, color: 'white' }}>Save Mission</span>
-              </button>
-            ) : (
-              <button
-                type="button"
-                disabled
-                className="w-full max-w-[560px] mx-auto rounded-btn flex items-center justify-center gap-2"
-                style={{ height: 44, background: '#E0E0E0' }}
-              >
-                <Check size={17} color="#AAAAAA" strokeWidth={3} />
-                <span style={{ fontSize: 14, fontWeight: 700, color: '#AAAAAA' }}>
-                  Save Mission
-                </span>
-              </button>
-            )}
+                Save Mission
+              </span>
+            </button>
           </div>
         </div>
       </div>

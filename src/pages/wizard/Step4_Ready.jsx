@@ -1,7 +1,8 @@
+import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { CheckCircle, Play, Home } from 'lucide-react'
-import { useMissions } from '../../hooks/useMissions'
-import { useWizard } from '../../hooks/useWizard'
+import useMissions from '../../hooks/useMissions'
+import useWizard from '../../hooks/useWizard'
 
 export default function Step4Ready() {
   const navigate = useNavigate()

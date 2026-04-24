@@ -1,3 +1,5 @@
+import React from 'react'
+
 export default function MapPlaceholder({ mode, className = '' }) {
   return (
     <div className={['relative w-full h-full overflow-hidden bg-[#e8f0e4]', className].join(' ')}>

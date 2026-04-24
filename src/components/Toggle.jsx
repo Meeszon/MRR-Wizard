@@ -1,3 +1,4 @@
+import React from 'react'
 import styles from './Toggle.module.scss'
 
 export default function Toggle({ enabled, onChange }) {

@@ -6,7 +6,9 @@ export function buildMission(wizard) {
   return {
     name: wizard.name.trim(),
     createdAt: new Date().toISOString().slice(0, 10),
-    areaHectares: 3.4,
+    areaHectares: wizard.areaHectares ?? 0,
+    homePoint: wizard.homePoint,
+    areaPolygon: wizard.areaPolygon,
     quality: wizard.quality,
     app: wizard.app,
     rtkEnabled: wizard.rtkEnabled,

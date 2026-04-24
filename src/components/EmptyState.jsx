@@ -1,3 +1,5 @@
+import React from 'react'
+
 export default function EmptyState({ icon, message }) {
   return (
     <div className="flex-1 flex flex-col items-center justify-center gap-3">

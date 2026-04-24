@@ -1,12 +1,12 @@
-import { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { Clock, Battery, Info, ChevronUp, Settings, Play } from 'lucide-react'
 import MapPlaceholder from '../components/MapPlaceholder'
 import PageHeader from '../components/PageHeader'
-import { useMissions } from '../hooks/useMissions'
-import { useWizard } from '../hooks/useWizard'
+import useMissions from '../hooks/useMissions'
+import useWizard from '../hooks/useWizard'
 import { calcMetrics, BLUE, RED, GREEN } from '../constants'
-import { mockDrones } from '../data/mockDrones'
+import mockDrones from '../data/mockDrones'
 
 const connectedDrones = mockDrones.filter((d) => d.connected)
 const isSingleDrone = connectedDrones.length === 1

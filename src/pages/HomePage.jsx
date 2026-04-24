@@ -1,8 +1,9 @@
+import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Plus, FolderOpen, Play, History, Joystick } from 'lucide-react'
 import logo from '../assets/logo.png'
-import { useMissions } from '../hooks/useMissions'
-import { useWizard } from '../hooks/useWizard'
+import useMissions from '../hooks/useMissions'
+import useWizard from '../hooks/useWizard'
 import { BLUE, DARK, GREEN } from '../constants'
 
 const DRONE_CONNECTED = true

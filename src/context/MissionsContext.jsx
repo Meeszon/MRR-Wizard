@@ -1,4 +1,4 @@
-import { createContext, useState, useMemo } from 'react'
+import React, { createContext, useState, useMemo } from 'react'
 import { mockMissions, mockCompletedMissions } from '../data/mockMissions'
 
 export const MissionsContext = createContext(null)

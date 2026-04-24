@@ -1,14 +1,14 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Camera, Mountain, Signal, Layers, ChevronRight, Check } from 'lucide-react'
 import Toggle from '../../components/Toggle'
 import NumberStepper from '../../components/NumberStepper'
 import WizardBar from '../../components/WizardBar'
 import QualityScreen from '../../components/QualityScreen'
-import { useWizard } from '../../hooks/useWizard'
-import { useAppPrefs } from '../../hooks/useAppPrefs'
+import useWizard from '../../hooks/useWizard'
+import useAppPrefs from '../../hooks/useAppPrefs'
 import { BLUE } from '../../constants'
-import { qualityLabel } from '../../utils/qualityUtils'
+import qualityLabel from '../../utils/qualityUtils'
 
 export default function Step3Settings() {
   const navigate = useNavigate()
@@ -107,7 +107,7 @@ export default function Step3Settings() {
       <div className="flex-shrink-0 px-8 pt-2 pb-3">
         <button
           type="button"
-          onClick={() => navigate('/wizard/step4')}
+          onClick={() => navigate('/wizard/step3')}
           className="w-full max-w-[560px] mx-auto py-3 rounded-btn bg-primary flex items-center justify-center gap-2 shadow active:scale-[0.98] transition-transform"
         >
           <Check size={18} color="white" strokeWidth={3} />

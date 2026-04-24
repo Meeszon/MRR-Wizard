@@ -1,4 +1,4 @@
-import { createContext, useState, useMemo } from 'react'
+import React, { createContext, useState, useMemo } from 'react'
 
 const defaultWizard = {
   editingMission: null,
@@ -7,6 +7,10 @@ const defaultWizard = {
   app: 'OpenDroneMap',
   rtkEnabled: false,
   highestPointMeters: 10,
+  homePoint: null,
+  areaPolygon: [],
+  polygonClosed: false,
+  areaHectares: null,
 }
 
 export const WizardContext = createContext(null)
@@ -32,6 +36,10 @@ export function WizardProvider({ children }) {
       app: mission.app,
       rtkEnabled: mission.rtkEnabled,
       highestPointMeters: mission.highestPointMeters,
+      homePoint: null,
+      areaPolygon: [],
+      polygonClosed: false,
+      areaHectares: null,
     })
     setIsEdit(true)
   }
