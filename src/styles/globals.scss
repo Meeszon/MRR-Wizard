@@ -79,3 +79,9 @@ input[type='range']::-moz-range-thumb {
   box-shadow: 0 1px 4px rgba(61, 90, 242, 0.35);
   border: 2px solid #fff;
 }
+
+/* Hide Mapbox branding — matches new-dashboard-frontend/Map.scss */
+.mapboxgl-ctrl-logo,
+.mapboxgl-ctrl-attrib {
+  display: none !important;
+}

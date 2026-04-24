@@ -1,3 +1,5 @@
+import React from 'react'
+
 export default function BigSlider({ value, onChange, min = 0, max = 100 }) {
   const percent = ((value - min) / (max - min)) * 100
   const pad = 24 // half of thumb width — keeps thumb fully visible at extremes

@@ -1,10 +1,10 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Check, Info, PenLine, RotateCcw } from 'lucide-react'
 import MapPlaceholder from '../../components/MapPlaceholder'
 import Button from '../../components/Button'
 import WizardBar from '../../components/WizardBar'
-import { useAppPrefs } from '../../hooks/useAppPrefs'
+import useAppPrefs from '../../hooks/useAppPrefs'
 
 export default function Step2Area() {
   const navigate = useNavigate()
@@ -22,12 +22,13 @@ export default function Step2Area() {
       <WizardBar />
 
       <div className="flex-1 relative min-h-0">
-        <div
+        <button
+          type="button"
           className="absolute inset-0 cursor-crosshair"
           onClick={() => setClicks((c) => Math.min(c + 1, 4))}
         >
           <MapPlaceholder mode={isClosed ? 'confirm' : 'draw'} className="absolute inset-0" />
-        </div>
+        </button>
 
         {/* Reset button */}
         <div className="absolute top-3 right-3">
@@ -45,7 +46,6 @@ export default function Step2Area() {
             <div className="bg-white/90 rounded-btn px-3 py-1.5 flex items-center gap-1.5 shadow-sm">
               <Info size={12} color="#5A5A5A" className="flex-shrink-0" />
               <span className="text-body font-medium">
-                {/* eslint-disable-next-line no-nested-ternary */}
                 {isClosed
                   ? 'Check the area and confirm'
                   : clicks === 0

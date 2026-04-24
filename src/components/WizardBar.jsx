@@ -1,15 +1,16 @@
+import React from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { ArrowLeft, Check, Info } from 'lucide-react'
-import { useAppPrefs } from '../hooks/useAppPrefs'
-import { useWizard } from '../hooks/useWizard'
+import useAppPrefs from '../hooks/useAppPrefs'
+import useWizard from '../hooks/useWizard'
 
-const TOTAL_STEPS = 4
+const TOTAL_STEPS = 3
+const STEPS = Array.from({ length: TOTAL_STEPS }, (_, i) => i + 1)
 
 function getBackPath(step, isEdit) {
   if (step === 1) return '/'
-  if (step === 2) return '/wizard/step1'
-  if (step === 3) return isEdit ? '/missions' : '/wizard/step2'
-  if (step === 4) return '/wizard/step3'
+  if (step === 2) return isEdit ? '/missions' : '/wizard/step1'
+  if (step === 3) return '/wizard/step2'
   return '/'
 }
 
@@ -45,22 +46,18 @@ export default function WizardBar() {
 
       {/* Step circles */}
       <div className="flex items-center flex-1 justify-center">
-        {Array.from({ length: TOTAL_STEPS }, (_, i) => {
-          const step = i + 1
+        {STEPS.map((step) => {
           const isDone = step < currentStep
           const isCurrent = step === currentStep
           const isClickable = isDone
 
+          const Tag = isClickable ? 'button' : 'div'
+
           return (
             <div key={step} className="flex items-center">
-              <div
+              <Tag
+                type={isClickable ? 'button' : undefined}
                 onClick={isClickable ? () => handleStepClick(step) : undefined}
-                role={isClickable ? 'button' : undefined}
-                // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
-                tabIndex={isClickable ? 0 : undefined}
-                onKeyDown={
-                  isClickable ? (e) => e.key === 'Enter' && handleStepClick(step) : undefined
-                }
                 style={{
                   width: 32,
                   height: 32,
@@ -74,6 +71,7 @@ export default function WizardBar() {
                   boxShadow: isCurrent ? '0 0 0 5px rgba(61,90,242,0.12)' : 'none',
                   cursor: isClickable ? 'pointer' : 'default',
                   transition: 'opacity 0.15s, transform 0.15s',
+                  padding: 0,
                 }}
                 className={isClickable ? 'hover:opacity-80 active:scale-95' : ''}
               >
@@ -91,7 +89,7 @@ export default function WizardBar() {
                     {step}
                   </span>
                 )}
-              </div>
+              </Tag>
 
               {step < TOTAL_STEPS && (
                 <div style={{ width: 56, height: 2, backgroundColor: '#E0E0E0' }} />

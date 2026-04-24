@@ -1,3 +1,4 @@
+import React from 'react'
 import { ArrowLeft } from 'lucide-react'
 
 export default function PageHeader({ title, onBack, right, height = 50 }) {
