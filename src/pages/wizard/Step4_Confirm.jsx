@@ -149,7 +149,7 @@ export default function Step4Confirm() {
               type="button"
               onClick={canSubmit ? handleSubmit : undefined}
               disabled={!canSubmit}
-              className={`w-full max-w-[560px] mx-auto rounded-btn flex items-center justify-center gap-2 ${canSubmit ? 'bg-primary shadow active:scale-[0.98] transition-transform' : ''}`}
+              className={`w-full max-w-[560px] mx-auto rounded-btn flex items-center justify-center gap-2 ${canSubmit ? 'bg-primary border border-primary-dark shadow active:scale-[0.98] transition-transform' : ''}`}
               style={{ height: 44, background: canSubmit ? undefined : '#E0E0E0' }}
             >
               <Check size={17} color={canSubmit ? 'white' : '#AAAAAA'} strokeWidth={3} />

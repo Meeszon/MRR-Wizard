@@ -127,6 +127,7 @@ export default function MissionListPage() {
                       fontWeight: 700,
                       color: feasible ? 'white' : '#AAAAAA',
                       background: feasible ? BLUE : '#EBEBEB',
+                      border: feasible ? '1px solid #2D47D9' : '1px solid #D8D8D8',
                       boxShadow: feasible ? '0 2px 8px rgba(61,90,242,0.25)' : 'none',
                       cursor: feasible ? 'pointer' : 'not-allowed',
                     }}

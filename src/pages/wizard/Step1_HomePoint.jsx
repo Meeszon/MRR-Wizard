@@ -65,7 +65,7 @@ export default function Step1HomePoint() {
             <button
               type="button"
               onClick={() => navigate('/wizard/step2')}
-              className="w-full max-w-[560px] mx-auto py-3 rounded-btn bg-primary flex items-center justify-center gap-2 shadow active:scale-[0.98] transition-transform"
+              className="w-full max-w-[560px] mx-auto py-3 rounded-btn bg-primary border border-primary-dark flex items-center justify-center gap-2 shadow active:scale-[0.98] transition-transform"
             >
               <Check size={18} color="white" strokeWidth={3} />
               <span className="text-h3 text-white font-bold">Confirm Home Point</span>
