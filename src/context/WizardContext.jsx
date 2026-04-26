@@ -6,7 +6,7 @@ const defaultWizard = {
   quality: 50,
   app: 'OpenDroneMap',
   rtkEnabled: false,
-  highestPointMeters: 10,
+  highestPointMeters: 0,
   homePoint: null,
   areaPolygon: [],
   polygonClosed: false,

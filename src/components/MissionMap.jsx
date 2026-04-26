@@ -1,4 +1,4 @@
-/* global window */
+/* global window, ResizeObserver */
 import React, {
   useRef,
   useCallback,
@@ -38,13 +38,27 @@ const MissionMap = forwardRef(
     )
 
     const mapRef = useRef()
+    const containerRef = useRef()
     const isDraggingRef = useRef(false)
     const pendingCenterRef = useRef(null)
     const mapLoadedRef = useRef(false)
 
+    useEffect(() => {
+      const el = containerRef.current
+      if (!el) return undefined
+      const ro = new ResizeObserver(() => {
+        mapRef.current?.resize()
+      })
+      ro.observe(el)
+      return () => ro.disconnect()
+    }, [])
+
     useImperativeHandle(ref, () => ({
       flyTo(center, zoom = 16) {
         mapRef.current?.flyTo({ center, zoom, duration: 1200 })
+      },
+      resize() {
+        mapRef.current?.resize()
       },
     }))
 
@@ -174,7 +188,11 @@ const MissionMap = forwardRef(
     }, [mode, polygon, polygonClosed])
 
     return (
-      <div className={className} style={{ cursor: isInteractive ? 'crosshair' : 'default' }}>
+      <div
+        ref={containerRef}
+        className={className}
+        style={{ cursor: isInteractive ? 'crosshair' : 'default' }}
+      >
         <Map
           ref={mapRef}
           mapLib={mapboxgl}
