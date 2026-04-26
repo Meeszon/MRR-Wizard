@@ -156,25 +156,16 @@ export default function HomePage() {
             <button
               type="button"
               onClick={() => navigate('/start-flight')}
-              className="flex-1 flex items-center rounded-card active:scale-[0.98] transition-transform select-none overflow-hidden relative"
+              className="flex-1 flex items-center rounded-card active:scale-[0.98] transition-transform select-none relative"
               style={{
                 background: BLUE,
                 paddingLeft: '25px',
                 paddingRight: '16px',
                 gap: '14px',
                 boxShadow: '0 3px 14px rgba(61,90,242,0.28)',
+                border: '1px solid #2D47D9',
               }}
             >
-              <svg
-                aria-hidden="true"
-                style={{ position: 'absolute', bottom: '-20px', right: '-20px', opacity: 0.12 }}
-                width="90"
-                height="90"
-                viewBox="0 0 90 90"
-                fill="none"
-              >
-                <circle cx="90" cy="90" r="60" stroke="white" strokeWidth="18" fill="none" />
-              </svg>
               <div
                 className="flex items-center justify-center rounded-btn flex-shrink-0"
                 style={{ width: '38px', height: '38px', background: 'rgba(255,255,255,0.18)' }}
@@ -213,7 +204,7 @@ export default function HomePage() {
             <button
               type="button"
               onClick={handleNewMission}
-              className="flex-1 flex items-center rounded-card active:scale-[0.98] transition-transform select-none bg-white border border-border overflow-hidden relative"
+              className="flex-1 flex items-center rounded-card active:scale-[0.98] transition-transform select-none bg-white border border-border relative"
               style={{
                 paddingLeft: '25px',
                 paddingRight: '16px',
@@ -221,16 +212,6 @@ export default function HomePage() {
                 boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
               }}
             >
-              <svg
-                aria-hidden="true"
-                style={{ position: 'absolute', bottom: '-20px', right: '-20px', opacity: 0.07 }}
-                width="90"
-                height="90"
-                viewBox="0 0 90 90"
-                fill="none"
-              >
-                <circle cx="90" cy="90" r="60" stroke={BLUE} strokeWidth="18" fill="none" />
-              </svg>
               <div
                 className="flex items-center justify-center rounded-btn flex-shrink-0"
                 style={{ width: '38px', height: '38px', background: 'rgba(61,90,242,0.10)' }}

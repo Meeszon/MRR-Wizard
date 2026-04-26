@@ -217,6 +217,7 @@ export default function EditMissionPage() {
           className="ml-auto flex items-center gap-1.5 rounded-btn active:scale-95 transition-transform select-none"
           style={{
             background: BLUE,
+            border: '1px solid #2D47D9',
             padding: '6px 14px',
             boxShadow: '0 2px 8px rgba(61,90,242,0.3)',
           }}

@@ -52,7 +52,7 @@ export default function Step4Ready() {
         <button
           type="button"
           onClick={goHome}
-          className="flex-1 rounded-btn bg-primary flex items-center justify-center gap-2 shadow active:scale-[0.98] transition-transform"
+          className="flex-1 rounded-btn bg-primary border border-primary-dark flex items-center justify-center gap-2 shadow active:scale-[0.98] transition-transform"
           style={{ height: 44 }}
         >
           <Play size={16} color="white" fill="white" strokeWidth={0} />

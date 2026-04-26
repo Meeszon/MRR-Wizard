@@ -22,17 +22,17 @@ export default function Button({
 
   const variants = {
     primary: disabled
-      ? 'bg-primary/40 text-white cursor-not-allowed'
-      : `bg-primary text-white hover:bg-primary-dark ${styles.primaryShadow}`,
+      ? 'bg-primary/40 text-white cursor-not-allowed border border-primary/30'
+      : `bg-primary text-white hover:bg-primary-dark border border-primary-dark ${styles.primaryShadow}`,
+    secondary: disabled
+      ? 'bg-white border border-border text-border cursor-not-allowed'
+      : 'bg-white border border-border text-body hover:bg-bg-secondary',
     outline: disabled
       ? 'border-2 border-border text-border cursor-not-allowed bg-transparent'
       : 'border-2 border-primary text-primary hover:bg-primary/5 bg-transparent',
     ghost: disabled
       ? 'text-border cursor-not-allowed bg-transparent'
       : 'text-body hover:bg-border/40 bg-transparent',
-    success: disabled
-      ? 'bg-positive/40 text-white cursor-not-allowed'
-      : 'bg-positive text-white hover:bg-positive/90 shadow-sm',
     danger: disabled
       ? 'bg-negative/40 text-white cursor-not-allowed'
       : 'bg-negative text-white hover:bg-negative/90 shadow-sm',

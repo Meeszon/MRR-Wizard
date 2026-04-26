@@ -93,9 +93,10 @@ export default function StartFlightPage() {
       style={{
         padding: '7px 14px',
         background: canStart ? BLUE : '#EBEBEB',
+        border: canStart ? '1px solid #2D47D9' : '1px solid #D8D8D8',
         cursor: canStart ? 'pointer' : 'not-allowed',
         boxShadow: canStart ? '0 2px 8px rgba(61,90,242,0.25)' : 'none',
-        transition: 'background 0.2s, box-shadow 0.2s',
+        transition: 'background 0.2s, box-shadow 0.2s, border-color 0.2s',
       }}
     >
       <Play
