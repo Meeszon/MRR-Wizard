@@ -1,330 +1,489 @@
 /* global window */
-import React, { useRef, useCallback, useEffect, useState, useMemo } from 'react'
-import Map, { Marker, Source, Layer, NavigationControl } from 'react-map-gl'
+import React, {
+  useRef,
+  useCallback,
+  useEffect,
+  useState,
+  useMemo,
+  forwardRef,
+  useImperativeHandle,
+} from 'react'
+import Map, { Marker, Source, Layer } from 'react-map-gl'
 import mapboxgl from 'mapbox-gl'
 import { distance as turfDistance, midpoint as turfMidpoint, point as turfPoint } from '@turf/turf'
 import { motion } from 'framer-motion'
-import { Home, MapPin, Plus } from 'lucide-react'
+import { Home, Plus, Minus, Check } from 'lucide-react'
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN
+const PRIMARY = '#3D5AF2'
+const GREEN = '#22C55E'
 
-const MAP_STYLES = [
-  { id: 'streets-v11', label: 'Kaart' },
-  { id: 'satellite-streets-v11', label: 'Satelliet' },
-]
+const MissionMap = forwardRef(
+  (
+    {
+      mode = 'home',
+      homePoint = null,
+      onHomePointChange,
+      polygon = [],
+      onPolygonChange,
+      polygonClosed = false,
+      onPolygonClose,
+      onBoundsChange,
+      className = '',
+    },
+    ref,
+  ) => {
+    const [mapStyle, setMapStyle] = useState(
+      () => window.localStorage.getItem('mapStyle') ?? 'streets-v11',
+    )
 
-export default function MissionMap({
-  mode = 'home',
-  homePoint = null,
-  onHomePointChange,
-  polygon = [],
-  onPolygonChange,
-  polygonClosed = false,
-  onPolygonClose,
-  className = '',
-}) {
-  const [mapStyle, setMapStyle] = useState(
-    () => window.localStorage.getItem('mapStyle') ?? 'streets-v11',
-  )
+    const mapRef = useRef()
+    const isDraggingRef = useRef(false)
+    const pendingCenterRef = useRef(null)
+    const mapLoadedRef = useRef(false)
 
-  const mapRef = useRef()
-  const isDraggingRef = useRef(false)
-  // Holds coords if geolocation resolves before the map finishes loading
-  const pendingCenterRef = useRef(null)
-  const mapLoadedRef = useRef(false)
+    useImperativeHandle(ref, () => ({
+      flyTo(center, zoom = 16) {
+        mapRef.current?.flyTo({ center, zoom, duration: 1200 })
+      },
+    }))
 
-  // Call getCurrentPosition from a React effect — this is the main browser JS thread,
-  // which is the only context where the browser will show a location permission prompt.
-  // Calling it from inside a Mapbox onLoad callback (a Mapbox-internal event) does not
-  // reliably trigger the prompt in all browsers.
-  useEffect(() => {
-    if (!window.navigator.geolocation) return
-    window.navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        const center = [pos.coords.longitude, pos.coords.latitude]
-        if (mapLoadedRef.current && mapRef.current) {
-          mapRef.current.flyTo({ center, zoom: 16, duration: 1500 })
-        } else {
-          pendingCenterRef.current = center
+    // Call getCurrentPosition from a React effect — this is the main browser JS thread,
+    // which is the only context where the browser will show a location permission prompt.
+    useEffect(() => {
+      if (!window.navigator.geolocation) return
+      window.navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const center = [pos.coords.longitude, pos.coords.latitude]
+          if (mapLoadedRef.current && mapRef.current) {
+            mapRef.current.flyTo({ center, zoom: 16, duration: 1500 })
+          } else {
+            pendingCenterRef.current = center
+          }
+        },
+        () => {},
+        { enableHighAccuracy: false },
+      )
+    }, [])
+
+    useEffect(() => {
+      window.localStorage.setItem('mapStyle', mapStyle)
+    }, [mapStyle])
+
+    function fireBoundsChange(mapInstance) {
+      if (!onBoundsChange || !mapInstance) return
+      const b = mapInstance.getBounds()
+      onBoundsChange({
+        west: b.getWest(),
+        south: b.getSouth(),
+        east: b.getEast(),
+        north: b.getNorth(),
+      })
+    }
+
+    function handleMapLoad(e) {
+      mapLoadedRef.current = true
+      if (pendingCenterRef.current && mapRef.current) {
+        mapRef.current.flyTo({ center: pendingCenterRef.current, zoom: 16, duration: 1500 })
+        pendingCenterRef.current = null
+      }
+      fireBoundsChange(e.target)
+    }
+
+    function handleMoveEnd(e) {
+      fireBoundsChange(e.target)
+    }
+
+    const handleMapClick = useCallback(
+      (e) => {
+        if (isDraggingRef.current) return
+        if (mode === 'home') {
+          onHomePointChange?.({ lat: e.lngLat.lat, lng: e.lngLat.lng })
+        } else if (mode === 'area' && !polygonClosed) {
+          onPolygonChange?.([...polygon, { lat: e.lngLat.lat, lng: e.lngLat.lng }])
+        } else if (mode === 'edit') {
+          if (!homePoint) {
+            onHomePointChange?.({ lat: e.lngLat.lat, lng: e.lngLat.lng })
+          } else if (!polygonClosed) {
+            onPolygonChange?.([...polygon, { lat: e.lngLat.lat, lng: e.lngLat.lng }])
+          }
         }
       },
-      () => {},
-      { enableHighAccuracy: false },
+      [mode, polygon, polygonClosed, homePoint, onHomePointChange, onPolygonChange],
     )
-  }, [])
 
-  useEffect(() => {
-    window.localStorage.setItem('mapStyle', mapStyle)
-  }, [mapStyle])
-
-  function handleMapLoad() {
-    mapLoadedRef.current = true
-    if (pendingCenterRef.current && mapRef.current) {
-      mapRef.current.flyTo({ center: pendingCenterRef.current, zoom: 16, duration: 1500 })
-      pendingCenterRef.current = null
-    }
-  }
-
-  const handleMapClick = useCallback(
-    (e) => {
-      if (isDraggingRef.current) return
-      if (mode === 'home') {
-        onHomePointChange?.({ lat: e.lngLat.lat, lng: e.lngLat.lng })
-      } else if (mode === 'area' && !polygonClosed) {
-        onPolygonChange?.([...polygon, { lat: e.lngLat.lat, lng: e.lngLat.lng }])
-      }
-    },
-    [mode, polygon, polygonClosed, onHomePointChange, onPolygonChange],
-  )
-
-  function handleInsertMidpoint(afterIndex) {
-    const p1 = polygon[afterIndex]
-    const p2 = polygon[(afterIndex + 1) % polygon.length]
-    const mid = turfMidpoint(turfPoint([p1.lng, p1.lat]), turfPoint([p2.lng, p2.lat]))
-    const newPt = { lat: mid.geometry.coordinates[1], lng: mid.geometry.coordinates[0] }
-    const newPoly = [...polygon.slice(0, afterIndex + 1), newPt, ...polygon.slice(afterIndex + 1)]
-    onPolygonChange?.(newPoly)
-  }
-
-  const coords = useMemo(() => polygon.map((p) => [p.lng, p.lat]), [polygon])
-  const canClose = !polygonClosed && polygon.length >= 3
-  const isInteractive = mode !== 'readonly'
-
-  const lineFeatures = useMemo(() => {
-    if (coords.length < 2 || polygonClosed) return []
-    const features = []
-    for (let i = 0; i < coords.length - 1; i += 1) {
-      features.push({
-        type: 'Feature',
-        properties: {},
-        geometry: { type: 'LineString', coordinates: [coords[i], coords[i + 1]] },
-      })
-    }
-    return features
-  }, [coords, polygonClosed])
-
-  const fillData = useMemo(
-    () =>
-      polygonClosed && polygon.length >= 3
-        ? {
-            type: 'Feature',
-            properties: {},
-            geometry: { type: 'Polygon', coordinates: [[...coords, coords[0]]] },
-          }
-        : null,
-    [polygonClosed, polygon.length, coords],
-  )
-
-  const midpoints = useMemo(() => {
-    if (mode !== 'area' || polygon.length < 2) return []
-    const segCount = polygonClosed ? polygon.length : polygon.length - 1
-    const pts = []
-    for (let i = 0; i < segCount; i += 1) {
-      const p1 = polygon[i]
-      const p2 = polygon[(i + 1) % polygon.length]
+    function handleInsertMidpoint(afterIndex) {
+      const p1 = polygon[afterIndex]
+      const p2 = polygon[(afterIndex + 1) % polygon.length]
       const mid = turfMidpoint(turfPoint([p1.lng, p1.lat]), turfPoint([p2.lng, p2.lat]))
-      pts.push({
-        key: `mp-${i}`,
-        mp: { lat: mid.geometry.coordinates[1], lng: mid.geometry.coordinates[0] },
-        dist: Math.round(
-          turfDistance(turfPoint([p1.lng, p1.lat]), turfPoint([p2.lng, p2.lat]), {
-            units: 'meters',
-          }),
-        ),
-        afterIndex: i,
-      })
+      const newPt = { lat: mid.geometry.coordinates[1], lng: mid.geometry.coordinates[0] }
+      const newPoly = [...polygon.slice(0, afterIndex + 1), newPt, ...polygon.slice(afterIndex + 1)]
+      onPolygonChange?.(newPoly)
     }
-    return pts
-  }, [mode, polygon, polygonClosed])
 
-  return (
-    <div className={className} style={{ cursor: isInteractive ? 'crosshair' : 'default' }}>
-      <Map
-        ref={mapRef}
-        mapLib={mapboxgl}
-        initialViewState={{ longitude: 5.29, latitude: 52.13, zoom: 7 }}
-        mapboxAccessToken={MAPBOX_TOKEN}
-        mapStyle={`mapbox://styles/mapbox/${mapStyle}`}
-        onClick={isInteractive ? handleMapClick : undefined}
-        style={{ width: '100%', height: '100%' }}
-        attributionControl={false}
-        antialias={false}
-        preserveDrawingBuffer={false}
-        failIfMajorPerformanceCaveat={false}
-        onLoad={() => handleMapLoad()}
-      >
-        <NavigationControl position="bottom-right" />
+    const coords = useMemo(() => polygon.map((p) => [p.lng, p.lat]), [polygon])
+    const canClose = !polygonClosed && polygon.length >= 3
+    const isInteractive = mode !== 'readonly'
 
-        {/* Map style switcher — stacked buttons, bottom-left, matches dashboard placement */}
-        <div className="absolute bottom-3 left-3 z-10 flex flex-col overflow-hidden rounded-btn shadow-md border border-white/20">
-          {MAP_STYLES.map((s) => (
-            <button
-              key={s.id}
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation()
-                setMapStyle(s.id)
-              }}
-              className={`px-3 py-1.5 text-xs font-semibold transition-colors ${
-                mapStyle === s.id ? 'bg-primary text-white' : 'bg-white/90 text-body hover:bg-white'
-              }`}
-            >
-              {s.label}
-            </button>
-          ))}
-        </div>
+    const lineFeatures = useMemo(() => {
+      if (coords.length < 2 || polygonClosed) return []
+      const features = []
+      for (let i = 0; i < coords.length - 1; i += 1) {
+        features.push({
+          type: 'Feature',
+          properties: {},
+          geometry: { type: 'LineString', coordinates: [coords[i], coords[i + 1]] },
+        })
+      }
+      return features
+    }, [coords, polygonClosed])
 
-        {/* Polygon fill (shown only when closed) */}
-        {fillData && (
-          <Source id="poly-fill" type="geojson" data={fillData}>
-            <Layer
-              id="poly-fill-layer"
-              type="fill"
-              paint={{ 'fill-color': '#d4d7e4', 'fill-opacity': 0.4 }}
-            />
-          </Source>
-        )}
+    const fillData = useMemo(
+      () =>
+        polygonClosed && polygon.length >= 3
+          ? {
+              type: 'Feature',
+              properties: {},
+              geometry: { type: 'Polygon', coordinates: [[...coords, coords[0]]] },
+            }
+          : null,
+      [polygonClosed, polygon.length, coords],
+    )
 
-        {/* White connecting lines while polygon is open (hidden when closed, fill takes over) */}
-        {lineFeatures.length > 0 && (
-          <Source
-            id="poly-lines"
-            type="geojson"
-            data={{ type: 'FeatureCollection', features: lineFeatures }}
-          >
-            <Layer
-              id="poly-lines-layer"
-              type="line"
-              paint={{ 'line-color': 'rgba(255, 255, 255, 0.8)', 'line-width': 2 }}
-            />
-          </Source>
-        )}
+    const midpoints = useMemo(() => {
+      if (mode !== 'area' && mode !== 'edit') return []
+      if (polygon.length < 2) return []
+      const segCount = polygonClosed ? polygon.length : polygon.length - 1
+      const pts = []
+      for (let i = 0; i < segCount; i += 1) {
+        const p1 = polygon[i]
+        const p2 = polygon[(i + 1) % polygon.length]
+        const mid = turfMidpoint(turfPoint([p1.lng, p1.lat]), turfPoint([p2.lng, p2.lat]))
+        pts.push({
+          key: `mp-${i}`,
+          mp: { lat: mid.geometry.coordinates[1], lng: mid.geometry.coordinates[0] },
+          dist: Math.round(
+            turfDistance(turfPoint([p1.lng, p1.lat]), turfPoint([p2.lng, p2.lat]), {
+              units: 'meters',
+            }),
+          ),
+          afterIndex: i,
+        })
+      }
+      return pts
+    }, [mode, polygon, polygonClosed])
 
-        {/* Midpoint markers with distance label and insert button */}
-        {midpoints.map(({ key, mp, dist, afterIndex }) => (
-          <Marker key={key} longitude={mp.lng} latitude={mp.lat} anchor="center">
-            <button
-              type="button"
-              className="relative group"
-              onClick={(e) => {
-                e.stopPropagation()
-                handleInsertMidpoint(afterIndex)
-              }}
-            >
-              <div className="absolute -inset-4 cursor-pointer" />
-              <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-white px-2 py-0.5 rounded-full shadow text-xs text-gray-600 pointer-events-none whitespace-nowrap group-hover:-translate-y-1 transition-transform duration-200">
-                {dist}m
-              </div>
-              <motion.div
-                className="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md cursor-pointer border border-gray-200 group-hover:bg-blue-50 group-hover:shadow-lg transition-all duration-200"
-                whileHover={{ scale: 1.15 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Plus size={20} className="text-blue-500" />
-              </motion.div>
-            </button>
-          </Marker>
-        ))}
-
-        {/* Polygon vertex markers */}
-        {(mode === 'area' || mode === 'readonly') &&
-          polygon.map((pt, i) => {
-            const isFirst = i === 0
-            const isCloseable = isFirst && canClose
+    return (
+      <div className={className} style={{ cursor: isInteractive ? 'crosshair' : 'default' }}>
+        <Map
+          ref={mapRef}
+          mapLib={mapboxgl}
+          initialViewState={{ longitude: 5.29, latitude: 52.13, zoom: 7 }}
+          mapboxAccessToken={MAPBOX_TOKEN}
+          mapStyle={`mapbox://styles/mapbox/${mapStyle}`}
+          onClick={isInteractive ? handleMapClick : undefined}
+          style={{ width: '100%', height: '100%' }}
+          attributionControl={false}
+          antialias={false}
+          preserveDrawingBuffer={false}
+          failIfMajorPerformanceCaveat={false}
+          onLoad={(e) => handleMapLoad(e)}
+          onMoveEnd={(e) => handleMoveEnd(e)}
+        >
+          {/* Bottom-right controls: style toggle + zoom in/out */}
+          {(() => {
+            const nextStyle = mapStyle === 'streets-v11' ? 'satellite-streets-v11' : 'streets-v11'
             return (
-              <Marker
-                key={`v-${pt.lat}-${pt.lng}`}
-                longitude={pt.lng}
-                latitude={pt.lat}
-                anchor="center"
-                draggable={mode === 'area' && !polygonClosed}
-                onDragStart={() => {
-                  isDraggingRef.current = true
+              <div className="absolute z-10 flex flex-col gap-2 bottom-2 right-6 min-[300px]:right-4">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setMapStyle(nextStyle)
+                  }}
+                  className="bg-white/95 rounded-btn shadow-md border border-border active:scale-95 transition-transform overflow-hidden"
+                  style={{ width: 44, height: 44 }}
+                >
+                  <img
+                    src={`https://api.mapbox.com/styles/v1/mapbox/${nextStyle}/static/5.29,52.13,10/88x88?access_token=${MAPBOX_TOKEN}`}
+                    alt={nextStyle.includes('satellite') ? 'Satellite' : 'Map'}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                  />
+                </button>
+                <div className="bg-white/95 rounded-btn shadow-md border border-border overflow-hidden flex flex-col">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      mapRef.current?.zoomIn()
+                    }}
+                    className="flex items-center justify-center active:bg-gray-100 transition-colors"
+                    style={{ width: 44, height: 44 }}
+                  >
+                    <Plus size={18} color="#5A5A5A" strokeWidth={2} />
+                  </button>
+                  <div className="bg-border" style={{ height: 1 }} />
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      mapRef.current?.zoomOut()
+                    }}
+                    className="flex items-center justify-center active:bg-gray-100 transition-colors"
+                    style={{ width: 44, height: 44 }}
+                  >
+                    <Minus size={18} color="#5A5A5A" strokeWidth={2} />
+                  </button>
+                </div>
+              </div>
+            )
+          })()}
+
+          {/* Polygon fill + stroke (shown only when closed) */}
+          {fillData && (
+            <Source id="poly-fill" type="geojson" data={fillData}>
+              <Layer
+                id="poly-fill-layer"
+                type="fill"
+                paint={{ 'fill-color': PRIMARY, 'fill-opacity': 0.1 }}
+              />
+              <Layer
+                id="poly-stroke-layer"
+                type="line"
+                paint={{ 'line-color': PRIMARY, 'line-width': 2, 'line-opacity': 0.55 }}
+              />
+            </Source>
+          )}
+
+          {/* Blue dashed lines while polygon is open */}
+          {lineFeatures.length > 0 && (
+            <Source
+              id="poly-lines"
+              type="geojson"
+              data={{ type: 'FeatureCollection', features: lineFeatures }}
+            >
+              <Layer
+                id="poly-lines-layer"
+                type="line"
+                paint={{
+                  'line-color': PRIMARY,
+                  'line-width': 2,
+                  'line-opacity': 0.65,
+                  'line-dasharray': [4, 3],
                 }}
-                onDragEnd={(e) => {
-                  setTimeout(() => {
-                    isDraggingRef.current = false
-                  }, 100)
-                  if (mode === 'area') {
-                    const updated = [...polygon]
-                    updated[i] = { lat: e.lngLat.lat, lng: e.lngLat.lng }
-                    onPolygonChange?.(updated)
-                  }
-                }}
+              />
+            </Source>
+          )}
+
+          {/* Midpoint markers with distance label and insert button */}
+          {midpoints.map(({ key, mp, dist, afterIndex }) => (
+            <Marker key={key} longitude={mp.lng} latitude={mp.lat} anchor="center">
+              <button
+                type="button"
+                className="relative group"
+                style={{ cursor: 'pointer' }}
                 onClick={(e) => {
-                  e.originalEvent.stopPropagation()
-                  if (isCloseable) onPolygonClose?.()
+                  e.stopPropagation()
+                  handleInsertMidpoint(afterIndex)
                 }}
               >
+                {/* Extended touch target */}
+                <div className="absolute -inset-4" />
+
+                {/* Distance pill */}
                 <div
+                  className="absolute pointer-events-none whitespace-nowrap group-hover:-translate-y-0.5 transition-transform duration-150"
                   style={{
-                    width: 44,
-                    height: 44,
+                    bottom: '100%',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    marginBottom: 6,
+                    background: 'rgba(23,25,35,0.80)',
+                    backdropFilter: 'blur(6px)',
+                    WebkitBackdropFilter: 'blur(6px)',
+                    color: 'white',
+                    fontSize: 10,
+                    fontWeight: 700,
+                    padding: '2px 7px',
+                    borderRadius: 20,
+                    letterSpacing: '0.03em',
+                  }}
+                >
+                  {dist}m
+                </div>
+
+                {/* Insert button */}
+                <motion.div
+                  style={{
+                    width: 22,
+                    height: 22,
+                    borderRadius: '50%',
+                    background: 'white',
+                    border: `1.5px solid ${PRIMARY}`,
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.18)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    cursor: isCloseable ? 'pointer' : mode === 'area' ? 'grab' : 'default',
+                  }}
+                  whileHover={{ scale: 1.25 }}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  <Plus size={11} color={PRIMARY} strokeWidth={2.5} />
+                </motion.div>
+              </button>
+            </Marker>
+          ))}
+
+          {/* Polygon vertex markers */}
+          {(mode === 'area' || mode === 'readonly' || mode === 'edit') &&
+            polygon.map((pt, i) => {
+              const isFirst = i === 0
+              const isCloseable = isFirst && canClose
+              const isDraggableVertex = mode === 'edit' || (mode === 'area' && !polygonClosed)
+              return (
+                <Marker
+                  key={`v-${pt.lat}-${pt.lng}`}
+                  longitude={pt.lng}
+                  latitude={pt.lat}
+                  anchor="center"
+                  draggable={isDraggableVertex}
+                  onDragStart={() => {
+                    isDraggingRef.current = true
+                  }}
+                  onDragEnd={(e) => {
+                    setTimeout(() => {
+                      isDraggingRef.current = false
+                    }, 100)
+                    if (mode === 'area' || mode === 'edit') {
+                      const updated = [...polygon]
+                      updated[i] = { lat: e.lngLat.lat, lng: e.lngLat.lng }
+                      onPolygonChange?.(updated)
+                    }
+                  }}
+                  onClick={(e) => {
+                    e.originalEvent.stopPropagation()
+                    if (isCloseable) onPolygonClose?.()
                   }}
                 >
-                  <motion.div
-                    className={`rounded-full flex items-center justify-center shadow-lg ${
-                      isCloseable ? 'bg-[#2563eb] w-12 h-12' : 'bg-white w-10 h-10'
-                    }`}
-                    animate={{
-                      scale: [1, 1.1, 1],
-                      opacity: [0.7, 1, 0.7],
+                  {/* 44×44 touch target */}
+                  <div
+                    style={{
+                      width: 44,
+                      height: 44,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      cursor: isCloseable ? 'pointer' : isDraggableVertex ? 'grab' : 'default',
                     }}
-                    transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-                    whileHover={{ scale: 1.1, transition: { duration: 0.2 } }}
                   >
-                    <MapPin
-                      size={20}
-                      strokeWidth={2}
-                      className={isCloseable ? 'text-white' : 'text-gray-700'}
-                    />
-                  </motion.div>
-                </div>
-              </Marker>
-            )
-          })}
+                    {isCloseable ? (
+                      /* First vertex in closeable state — green with checkmark + pulsing ring */
+                      <div style={{ position: 'relative', width: 26, height: 26 }}>
+                        {/* Pulsing ring */}
+                        <motion.div
+                          style={{
+                            position: 'absolute',
+                            top: -9,
+                            left: -9,
+                            width: 44,
+                            height: 44,
+                            borderRadius: '50%',
+                            border: `2px solid ${GREEN}`,
+                            pointerEvents: 'none',
+                          }}
+                          animate={{ opacity: [0, 0.65, 0], scale: [0.75, 1.1, 0.75] }}
+                          transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
+                        />
+                        <motion.div
+                          style={{
+                            width: 26,
+                            height: 26,
+                            borderRadius: '50%',
+                            background: GREEN,
+                            border: '2.5px solid white',
+                            boxShadow: '0 2px 12px rgba(34,197,94,0.5)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                          }}
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                        >
+                          <Check size={12} color="white" strokeWidth={3} />
+                        </motion.div>
+                      </div>
+                    ) : (
+                      /* Normal vertex — solid blue circle with white border */
+                      <motion.div
+                        style={{
+                          width: 18,
+                          height: 18,
+                          borderRadius: '50%',
+                          background: PRIMARY,
+                          border: '2.5px solid white',
+                          boxShadow: '0 2px 8px rgba(0,0,0,0.28)',
+                        }}
+                        whileHover={isDraggableVertex ? { scale: 1.25 } : undefined}
+                        whileTap={isDraggableVertex ? { scale: 0.9 } : undefined}
+                      />
+                    )}
+                  </div>
+                </Marker>
+              )
+            })}
 
-        {/* Home point marker */}
-        {homePoint && (
-          <Marker
-            longitude={homePoint.lng}
-            latitude={homePoint.lat}
-            anchor="center"
-            draggable={mode === 'home'}
-            onDragStart={() => {
-              isDraggingRef.current = true
-            }}
-            onDragEnd={(e) => {
-              setTimeout(() => {
-                isDraggingRef.current = false
-              }, 100)
-              onHomePointChange?.({ lat: e.lngLat.lat, lng: e.lngLat.lng })
-            }}
-          >
-            <div
-              style={{
-                width: 44,
-                height: 44,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: mode === 'home' ? 'grab' : 'default',
+          {/* Home point marker */}
+          {homePoint && (
+            <Marker
+              longitude={homePoint.lng}
+              latitude={homePoint.lat}
+              anchor="center"
+              draggable={mode === 'home' || mode === 'edit'}
+              onDragStart={() => {
+                isDraggingRef.current = true
+              }}
+              onDragEnd={(e) => {
+                setTimeout(() => {
+                  isDraggingRef.current = false
+                }, 100)
+                onHomePointChange?.({ lat: e.lngLat.lat, lng: e.lngLat.lng })
               }}
             >
-              <motion.div
-                className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg"
-                whileHover={{ scale: 1.1, transition: { duration: 0.2 } }}
+              {/* 44×44 touch target */}
+              <div
+                style={{
+                  width: 44,
+                  height: 44,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: mode === 'home' || mode === 'edit' ? 'grab' : 'default',
+                }}
               >
-                <Home size={20} strokeWidth={2} className="text-gray-700" />
-              </motion.div>
-            </div>
-          </Marker>
-        )}
-      </Map>
-    </div>
-  )
-}
+                <motion.div
+                  style={{
+                    width: 34,
+                    height: 34,
+                    borderRadius: '50%',
+                    background: PRIMARY,
+                    border: '3px solid white',
+                    boxShadow: '0 3px 14px rgba(61,90,242,0.45), 0 1px 4px rgba(0,0,0,0.18)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                  whileHover={{ scale: 1.1, transition: { duration: 0.15 } }}
+                  whileTap={{ scale: 0.93 }}
+                >
+                  <Home size={15} strokeWidth={2.5} color="white" />
+                </motion.div>
+              </div>
+            </Marker>
+          )}
+        </Map>
+      </div>
+    )
+  },
+)
+
+export default MissionMap

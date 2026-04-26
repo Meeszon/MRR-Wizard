@@ -61,8 +61,8 @@ input[type='range'] {
 input[type='range']::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 18px;
-  height: 18px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   background: var(--color-primary);
   cursor: pointer;
@@ -71,8 +71,8 @@ input[type='range']::-webkit-slider-thumb {
 }
 
 input[type='range']::-moz-range-thumb {
-  width: 18px;
-  height: 18px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   background: var(--color-primary);
   cursor: pointer;
@@ -80,8 +80,21 @@ input[type='range']::-moz-range-thumb {
   border: 2px solid #fff;
 }
 
+/* Hairline coordinate grid — evokes GIS/survey map grids used in drone flight planning */
+.bg-bg-secondary:not(button):not([class*='btn']) {
+  background-image:
+    linear-gradient(rgba(61, 90, 242, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(61, 90, 242, 0.07) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+
 /* Hide Mapbox branding — matches new-dashboard-frontend/Map.scss */
 .mapboxgl-ctrl-logo,
 .mapboxgl-ctrl-attrib {
   display: none !important;
+}
+
+/* Mapbox canvas is inline by default; block removes the ~4px descender gap */
+.mapboxgl-canvas {
+  display: block;
 }

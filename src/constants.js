@@ -1,4 +1,6 @@
 export const BLUE = '#3D5AF2'
+
+export const APPLICATION_OPTIONS = ['OpenDroneMap', 'Pix4D', 'DJI Terra', 'Agisoft Metashape']
 export const DARK = '#23262F'
 export const RED = '#E0515F'
 export const GREEN = '#22C55E'

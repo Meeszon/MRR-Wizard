@@ -92,6 +92,7 @@ export default function FlightLogPage() {
                       fontWeight: 700,
                       color: 'white',
                       background: BLUE,
+                      border: '1px solid #2D47D9',
                       boxShadow: '0 2px 8px rgba(61,90,242,0.25)',
                     }}
                   >
