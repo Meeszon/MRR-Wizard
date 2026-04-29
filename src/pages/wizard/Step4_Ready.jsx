@@ -51,7 +51,10 @@ export default function Step4Ready() {
 
         <button
           type="button"
-          onClick={goHome}
+          onClick={() => {
+            resetWizard()
+            navigate('/start-flight')
+          }}
           className="flex-1 rounded-btn bg-primary border border-primary-dark flex items-center justify-center gap-2 shadow active:scale-[0.98] transition-transform"
           style={{ height: 44 }}
         >

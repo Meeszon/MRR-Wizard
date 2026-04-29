@@ -52,7 +52,10 @@ export default function MissionListPage() {
           />
         ) : (
           missions.map((mission) => {
-            const { flightTime, batteryNeed, feasible } = calcMetrics(mission.quality)
+            const { flightTime, batteryNeed, feasible } = calcMetrics(
+              mission.quality,
+              mission.highestPointMeters,
+            )
             return (
               <div
                 key={mission.id}
