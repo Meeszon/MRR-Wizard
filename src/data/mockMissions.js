@@ -8,6 +8,14 @@ export const mockMissions = [
     app: 'OpenDroneMap',
     rtkEnabled: true,
     highestPointMeters: 45,
+    homePoint: { lat: 52.5245, lng: 6.0932 },
+    polygon: [
+      { lat: 52.5258, lng: 6.0905 },
+      { lat: 52.5258, lng: 6.0978 },
+      { lat: 52.5222, lng: 6.0978 },
+      { lat: 52.5222, lng: 6.0905 },
+    ],
+    polygonClosed: true,
   },
   {
     id: '2',
@@ -18,6 +26,14 @@ export const mockMissions = [
     app: 'OpenDroneMap',
     rtkEnabled: false,
     highestPointMeters: 30,
+    homePoint: { lat: 52.0847, lng: 5.1226 },
+    polygon: [
+      { lat: 52.0858, lng: 5.1208 },
+      { lat: 52.0858, lng: 5.1248 },
+      { lat: 52.0836, lng: 5.1248 },
+      { lat: 52.0836, lng: 5.1208 },
+    ],
+    polygonClosed: true,
   },
   {
     id: '3',
@@ -28,6 +44,14 @@ export const mockMissions = [
     app: 'OpenDroneMap',
     rtkEnabled: true,
     highestPointMeters: 12,
+    homePoint: { lat: 51.4415, lng: 5.4753 },
+    polygon: [
+      { lat: 51.4432, lng: 5.4672 },
+      { lat: 51.4432, lng: 5.484 },
+      { lat: 51.4398, lng: 5.484 },
+      { lat: 51.4398, lng: 5.4672 },
+    ],
+    polygonClosed: true,
   },
 ]
 

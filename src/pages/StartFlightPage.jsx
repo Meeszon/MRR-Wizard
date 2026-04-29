@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { Clock, Battery, Info, ChevronUp, Settings, Play } from 'lucide-react'
-import MapPlaceholder from '../components/MapPlaceholder'
+import MissionMap from '../components/MissionMap'
 import PageHeader from '../components/PageHeader'
 import useMissions from '../hooks/useMissions'
 import useWizard from '../hooks/useWizard'
@@ -296,7 +296,19 @@ export default function StartFlightPage() {
                           borderTop: `1px solid ${selected ? 'rgba(61,90,242,0.12)' : '#F0F0F0'}`,
                         }}
                       >
-                        <MapPlaceholder mode="edit" className="absolute inset-0" />
+                        <MissionMap
+                          mode="readonly"
+                          homePoint={mission.homePoint}
+                          polygon={mission.polygon ?? []}
+                          polygonClosed={mission.polygonClosed ?? false}
+                          showControls={false}
+                          initialCenter={
+                            mission.homePoint
+                              ? { lat: mission.homePoint.lat, lng: mission.homePoint.lng, zoom: 14 }
+                              : null
+                          }
+                          className="absolute inset-0"
+                        />
                         <button
                           type="button"
                           onClick={() => handleEditMission(mission)}

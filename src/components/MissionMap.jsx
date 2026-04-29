@@ -29,6 +29,8 @@ const MissionMap = forwardRef(
       polygonClosed = false,
       onPolygonClose,
       onBoundsChange,
+      initialCenter = null,
+      showControls = true,
       className = '',
     },
     ref,
@@ -64,7 +66,9 @@ const MissionMap = forwardRef(
 
     // Call getCurrentPosition from a React effect — this is the main browser JS thread,
     // which is the only context where the browser will show a location permission prompt.
+    // Skip when an explicit initialCenter is provided — no need to overwrite it.
     useEffect(() => {
+      if (initialCenter) return
       if (!window.navigator.geolocation) return
       window.navigator.geolocation.getCurrentPosition(
         (pos) => {
@@ -196,7 +200,15 @@ const MissionMap = forwardRef(
         <Map
           ref={mapRef}
           mapLib={mapboxgl}
-          initialViewState={{ longitude: 5.29, latitude: 52.13, zoom: 7 }}
+          initialViewState={
+            initialCenter
+              ? {
+                  longitude: initialCenter.lng,
+                  latitude: initialCenter.lat,
+                  zoom: initialCenter.zoom ?? 15,
+                }
+              : { longitude: 5.29, latitude: 52.13, zoom: 7 }
+          }
           mapboxAccessToken={MAPBOX_TOKEN}
           mapStyle={`mapbox://styles/mapbox/${mapStyle}`}
           onClick={isInteractive ? handleMapClick : undefined}
@@ -209,53 +221,59 @@ const MissionMap = forwardRef(
           onMoveEnd={(e) => handleMoveEnd(e)}
         >
           {/* Bottom-right controls: style toggle + zoom in/out */}
-          {(() => {
-            const nextStyle = mapStyle === 'streets-v11' ? 'satellite-streets-v11' : 'streets-v11'
-            return (
-              <div className="absolute z-10 flex flex-col gap-2 bottom-2 right-6 min-[300px]:right-4">
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    setMapStyle(nextStyle)
-                  }}
-                  className="bg-white/95 rounded-btn shadow-md border border-border active:scale-95 transition-transform overflow-hidden"
-                  style={{ width: 44, height: 44 }}
-                >
-                  <img
-                    src={`https://api.mapbox.com/styles/v1/mapbox/${nextStyle}/static/5.29,52.13,10/88x88?access_token=${MAPBOX_TOKEN}`}
-                    alt={nextStyle.includes('satellite') ? 'Satellite' : 'Map'}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-                  />
-                </button>
-                <div className="bg-white/95 rounded-btn shadow-md border border-border overflow-hidden flex flex-col">
+          {showControls &&
+            (() => {
+              const nextStyle = mapStyle === 'streets-v11' ? 'satellite-streets-v11' : 'streets-v11'
+              return (
+                <div className="absolute z-10 flex flex-col gap-2 bottom-2 right-6 min-[300px]:right-4">
                   <button
                     type="button"
                     onClick={(e) => {
                       e.stopPropagation()
-                      mapRef.current?.zoomIn()
+                      setMapStyle(nextStyle)
                     }}
-                    className="flex items-center justify-center active:bg-gray-100 transition-colors"
+                    className="bg-white/95 rounded-btn shadow-md border border-border active:scale-95 transition-transform overflow-hidden"
                     style={{ width: 44, height: 44 }}
                   >
-                    <Plus size={18} color="#5A5A5A" strokeWidth={2} />
+                    <img
+                      src={`https://api.mapbox.com/styles/v1/mapbox/${nextStyle}/static/5.29,52.13,10/88x88?access_token=${MAPBOX_TOKEN}`}
+                      alt={nextStyle.includes('satellite') ? 'Satellite' : 'Map'}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        display: 'block',
+                      }}
+                    />
                   </button>
-                  <div className="bg-border" style={{ height: 1 }} />
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      mapRef.current?.zoomOut()
-                    }}
-                    className="flex items-center justify-center active:bg-gray-100 transition-colors"
-                    style={{ width: 44, height: 44 }}
-                  >
-                    <Minus size={18} color="#5A5A5A" strokeWidth={2} />
-                  </button>
+                  <div className="bg-white/95 rounded-btn shadow-md border border-border overflow-hidden flex flex-col">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        mapRef.current?.zoomIn()
+                      }}
+                      className="flex items-center justify-center active:bg-gray-100 transition-colors"
+                      style={{ width: 44, height: 44 }}
+                    >
+                      <Plus size={18} color="#5A5A5A" strokeWidth={2} />
+                    </button>
+                    <div className="bg-border" style={{ height: 1 }} />
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        mapRef.current?.zoomOut()
+                      }}
+                      className="flex items-center justify-center active:bg-gray-100 transition-colors"
+                      style={{ width: 44, height: 44 }}
+                    >
+                      <Minus size={18} color="#5A5A5A" strokeWidth={2} />
+                    </button>
+                  </div>
                 </div>
-              </div>
-            )
-          })()}
+              )
+            })()}
 
           {/* Polygon fill + stroke (shown only when closed) */}
           {fillData && (

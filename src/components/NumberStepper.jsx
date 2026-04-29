@@ -107,7 +107,8 @@ export default function NumberStepper({
           onKeyDown={(e) => e.key === 'Enter' && e.currentTarget.blur()}
           className="font-bold text-title text-center bg-transparent outline-none min-w-0"
           style={{
-            fontSize: s.label.fontSize,
+            fontSize: Math.max(16, s.label.fontSize),
+            zoom: s.label.fontSize < 16 ? s.label.fontSize / 16 : undefined,
             color: showUnit ? '#23262F' : '#BBBBBB',
             width: isEditing ? '4ch' : value === null ? '2ch' : `${String(value).length}ch`,
           }}

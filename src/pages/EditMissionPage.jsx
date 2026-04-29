@@ -141,7 +141,7 @@ export default function EditMissionPage() {
       ...buildMissionUpdate(wizard),
       name: wizard.name || wizard.editingMission.name,
     })
-    navigate('/missions')
+    navigate(location.state?.from ?? '/missions')
   }
 
   function handleCreate() {
