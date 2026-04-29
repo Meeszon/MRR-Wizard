@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Play, Pencil, Plus, FolderOpen, Locate, Clock, Battery } from 'lucide-react'
+import { Play, Settings, Plus, FolderOpen, Locate, Clock, Battery } from 'lucide-react'
 import PageHeader from '../components/PageHeader'
 import EmptyState from '../components/EmptyState'
 import useMissions from '../hooks/useMissions'
@@ -113,7 +113,7 @@ export default function MissionListPage() {
                       color: '#5A5A5A',
                     }}
                   >
-                    <Pencil size={13} strokeWidth={2} />
+                    <Settings size={13} strokeWidth={2} />
                     Edit
                   </button>
                   <button
