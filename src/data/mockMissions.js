@@ -66,6 +66,7 @@ export const mockCompletedMissions = [
     app: 'OpenDroneMap',
     rtkEnabled: true,
     highestPointMeters: 18,
+    status: 'complete',
   },
   {
     id: 'c2',
@@ -77,6 +78,7 @@ export const mockCompletedMissions = [
     app: 'OpenDroneMap',
     rtkEnabled: true,
     highestPointMeters: 40,
+    status: 'complete',
   },
   {
     id: 'c3',
@@ -88,6 +90,7 @@ export const mockCompletedMissions = [
     app: 'OpenDroneMap',
     rtkEnabled: false,
     highestPointMeters: 5,
+    status: 'complete',
   },
   {
     id: 'c4',
@@ -99,6 +102,7 @@ export const mockCompletedMissions = [
     app: 'OpenDroneMap',
     rtkEnabled: true,
     highestPointMeters: 10,
+    status: 'complete',
   },
   {
     id: 'c5',
@@ -110,5 +114,18 @@ export const mockCompletedMissions = [
     app: 'OpenDroneMap',
     rtkEnabled: false,
     highestPointMeters: 28,
+    status: 'complete',
+  },
+  {
+    id: 'c6',
+    name: 'Construction Site North',
+    createdAt: '2025-03-08',
+    completedAt: '2025-03-10',
+    areaHectares: 2.4,
+    quality: 65,
+    app: 'OpenDroneMap',
+    rtkEnabled: true,
+    highestPointMeters: 45,
+    status: 'aborted',
   },
 ]

@@ -88,6 +88,19 @@ input[type='range']::-moz-range-thumb {
   background-size: 44px 44px;
 }
 
+@keyframes pulse-soft {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+.pulse-soft {
+  animation: pulse-soft 2.2s ease-in-out infinite;
+}
+
 /* Hide Mapbox branding — matches new-dashboard-frontend/Map.scss */
 .mapboxgl-ctrl-logo,
 .mapboxgl-ctrl-attrib {

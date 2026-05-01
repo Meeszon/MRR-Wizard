@@ -222,7 +222,13 @@ export default function EditMissionPage() {
               }
             }}
             className="flex items-center gap-1.5 rounded-btn border border-border bg-white active:bg-bg-secondary transition-colors select-none"
-            style={{ padding: '6px 12px', fontSize: 13, fontWeight: 600, color: '#5A5A5A' }}
+            style={{
+              height: 32,
+              padding: '0 12px',
+              fontSize: 13,
+              fontWeight: 600,
+              color: '#5A5A5A',
+            }}
           >
             <X size={14} color="#5A5A5A" strokeWidth={2.5} />
             Cancel
@@ -234,7 +240,7 @@ export default function EditMissionPage() {
               type="button"
               onClick={() => setGuidanceOpen((v) => !v)}
               className="flex items-center justify-center rounded-btn border border-border bg-white active:bg-bg-secondary transition-colors select-none"
-              style={{ padding: '9px' }}
+              style={{ height: 32, width: 32, padding: 0 }}
               title={guidanceOpen ? 'Hide guide' : 'Show guide'}
             >
               <Info size={14} color={guidanceOpen ? BLUE : '#AAAAAA'} strokeWidth={2} />
@@ -311,9 +317,10 @@ export default function EditMissionPage() {
             disabled={!canConfirm}
             className={`ml-auto flex items-center gap-1.5 rounded-btn select-none ${canConfirm ? 'active:scale-95 transition-transform' : ''}`}
             style={{
+              height: 32,
               background: canConfirm ? BLUE : '#E0E0E0',
               border: `1px solid ${canConfirm ? '#2D47D9' : '#D0D0D0'}`,
-              padding: '6px 14px',
+              padding: '0 14px',
               boxShadow: canConfirm ? '0 2px 8px rgba(61,90,242,0.3)' : 'none',
             }}
           >
@@ -330,9 +337,10 @@ export default function EditMissionPage() {
             onClick={handleSave}
             className="ml-auto flex items-center gap-1.5 rounded-btn active:scale-95 transition-transform select-none"
             style={{
+              height: 32,
               background: BLUE,
               border: '1px solid #2D47D9',
-              padding: '6px 14px',
+              padding: '0 14px',
               boxShadow: '0 2px 8px rgba(61,90,242,0.3)',
             }}
           >
@@ -468,7 +476,6 @@ export default function EditMissionPage() {
                     <div
                       style={{
                         background: 'white',
-                        borderRadius: 6,
                         border: '1px solid #E4E4E4',
                         boxShadow: '0 1px 6px rgba(0,0,0,0.08)',
                         overflow: 'hidden',
@@ -514,7 +521,7 @@ export default function EditMissionPage() {
                     <div
                       style={{
                         background: 'white',
-                        borderRadius: '0 6px 6px 0',
+                        borderRadius: 0,
                         border: '1px solid #E4E4E4',
                         borderLeft: 'none',
                         boxShadow: '2px 1px 6px rgba(0,0,0,0.07)',

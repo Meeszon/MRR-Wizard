@@ -34,7 +34,7 @@ function MetricCell({ icon, value, label, valueColor }) {
       >
         {value}
       </span>
-      <span style={{ fontSize: 10, fontWeight: 500, color: '#9A9AB0', letterSpacing: '0.04em' }}>
+      <span style={{ fontSize: 10, fontWeight: 600, color: '#9A9AB0', letterSpacing: '0.06em' }}>
         {label}
       </span>
     </div>
@@ -93,19 +93,19 @@ export default function SettingsPanel({ metrics, wizard, updateWizard, isCreate 
             <MetricCell
               icon={<ArrowUp size={14} color={BLUE} />}
               value={`${metrics.flightHeight}m`}
-              label="altitude"
+              label="ALTITUDE"
             />
             <div style={{ width: 1, background: 'rgba(61,90,242,0.12)', margin: '10px 0' }} />
             <MetricCell
               icon={<Clock size={14} color={BLUE} />}
               value={`${metrics.flightTime} min`}
-              label="flight time"
+              label="FLIGHT TIME"
             />
             <div style={{ width: 1, background: 'rgba(61,90,242,0.12)', margin: '10px 0' }} />
             <MetricCell
               icon={<Battery size={14} color={metrics.feasible ? BLUE : RED} />}
               value={`-${metrics.batteryNeed}%`}
-              label={`of ${CURRENT_BATTERY}%`}
+              label={`OF ${CURRENT_BATTERY}%`}
               valueColor={metrics.feasible ? undefined : RED}
             />
           </div>
@@ -120,8 +120,11 @@ export default function SettingsPanel({ metrics, wizard, updateWizard, isCreate 
               <span className="font-semibold text-title" style={{ fontSize: 13 }}>
                 Quality
               </span>
-              <span className="ml-auto font-semibold" style={{ fontSize: 13, color: '#5A5A5A' }}>
-                {qualityLabel(wizard.quality)}
+              <span
+                className="ml-auto font-mono font-bold"
+                style={{ fontSize: 12, color: BLUE, letterSpacing: '0.04em' }}
+              >
+                {qualityLabel(wizard.quality).toUpperCase()}
               </span>
             </div>
             <BigSlider
