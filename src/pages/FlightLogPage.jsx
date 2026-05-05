@@ -72,17 +72,19 @@ export default function FlightLogPage() {
 
   return (
     <div className="w-full h-full flex flex-col bg-bg-secondary">
-      <PageHeader
-        title="Flight Log"
-        onBack={() => navigate('/')}
-        right={
-          count > 0 && (
-            <span style={{ fontSize: 12, fontWeight: 600, color: '#AAAAAA' }}>
-              {count} {count === 1 ? 'flight' : 'flights'}
-            </span>
-          )
-        }
-      />
+      <div className="lg:hidden">
+        <PageHeader
+          title="Flight Log"
+          onBack={() => navigate('/')}
+          right={
+            count > 0 && (
+              <span style={{ fontSize: 12, fontWeight: 600, color: '#AAAAAA' }}>
+                {count} {count === 1 ? 'flight' : 'flights'}
+              </span>
+            )
+          }
+        />
+      </div>
 
       <div className="flex-1 overflow-y-auto px-8 py-4 min-h-0">
         {count === 0 ? (

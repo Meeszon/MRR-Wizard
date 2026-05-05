@@ -31,17 +31,19 @@ export default function MissionListPage() {
 
   return (
     <div className="w-full h-full flex flex-col bg-bg-secondary">
-      <PageHeader
-        title="My Missions"
-        onBack={() => navigate('/')}
-        right={
-          count > 0 && (
-            <span style={{ fontSize: 12, fontWeight: 600, color: '#AAAAAA' }}>
-              {count} {count === 1 ? 'mission' : 'missions'}
-            </span>
-          )
-        }
-      />
+      <div className="lg:hidden">
+        <PageHeader
+          title="My Missions"
+          onBack={() => navigate('/')}
+          right={
+            count > 0 && (
+              <span style={{ fontSize: 12, fontWeight: 600, color: '#AAAAAA' }}>
+                {count} {count === 1 ? 'mission' : 'missions'}
+              </span>
+            )
+          }
+        />
+      </div>
 
       <div className="flex-1 overflow-y-auto px-8 py-4 flex flex-col gap-2.5 min-h-0">
         <NewMissionCard onNew={() => handleNewMission()} />

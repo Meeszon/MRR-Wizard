@@ -112,19 +112,24 @@ input[type='range']::-moz-range-thumb {
   animation: pulse-soft 2.2s ease-in-out infinite;
 }
 
-/* Nav item — bottom border active indicator */
+/* Nav item underline indicator */
 .nav-item {
   position: relative;
 }
-.nav-item.active::after {
+.nav-item::after {
   content: '';
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  left: 14px;
+  right: 14px;
+  bottom: -1px;
   height: 2px;
-  background-color: #3d5af2;
+  background: var(--color-primary);
   border-radius: 2px 2px 0 0;
+  transform: scaleX(0);
+  transition: transform 0.18s ease;
+}
+.nav-item.active::after {
+  transform: scaleX(1);
 }
 
 /* Card hover lift */

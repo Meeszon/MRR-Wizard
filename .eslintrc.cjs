@@ -24,5 +24,6 @@ module.exports = {
     'react/state-in-constructor': 'off',
     'no-plusplus': 'off',
     'no-alert': 'off',
+    'jsx-a11y/label-has-associated-control': ['error', { assert: 'either' }],
   },
 }

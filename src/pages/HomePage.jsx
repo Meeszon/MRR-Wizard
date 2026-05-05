@@ -484,54 +484,6 @@ export default function HomePage() {
 
       {/* ══ Desktop layout (≥ 1024px) ══ */}
       <div className="w-full h-full bg-bg-secondary hidden lg:flex flex-col">
-        {/* Header */}
-        <header
-          className="flex items-center bg-white border-b border-border flex-shrink-0"
-          style={{ height: 60, paddingInline: 24 }}
-        >
-          <button
-            type="button"
-            onClick={() => navigate('/')}
-            className="flex items-center gap-2.5 mr-7"
-          >
-            <img src={logo} alt="MRR Drones" style={{ width: 32, height: 32 }} />
-            <span
-              className="font-bold text-title"
-              style={{ fontSize: 15, letterSpacing: '-0.01em' }}
-            >
-              MRR Drones
-            </span>
-          </button>
-
-          <nav className="flex items-stretch h-full">
-            {[
-              { key: '/', label: 'Home', active: true },
-              { key: '/missions', label: 'Missions', active: false },
-              { key: '/flightlog', label: 'Flightlog', active: false },
-            ].map((item) => (
-              <button
-                key={item.key}
-                type="button"
-                onClick={() => navigate(item.key)}
-                className={`nav-item flex items-center px-3.5 ${item.active ? 'active' : ''}`}
-                style={{
-                  fontSize: 13,
-                  fontWeight: item.active ? 700 : 500,
-                  color: item.active ? BLUE : '#5A5A5A',
-                }}
-              >
-                {item.label}
-              </button>
-            ))}
-          </nav>
-
-          <div className="ml-auto flex items-center gap-3">
-            <StatusPill />
-            <div style={{ width: 1, height: 22, background: '#E0E0E0' }} />
-            <LangToggle />
-          </div>
-        </header>
-
         {/* Scrollable content */}
         <div className="flex-1 min-h-0 overflow-y-auto">
           <div className="mx-auto" style={{ maxWidth: 1180, padding: '48px 32px 64px' }}>
