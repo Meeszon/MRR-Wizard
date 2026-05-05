@@ -341,7 +341,7 @@ const MissionMap = forwardRef(
                     fontSize: 10,
                     fontWeight: 700,
                     padding: '2px 7px',
-                    borderRadius: 20,
+                    borderRadius: 5,
                     letterSpacing: '0.03em',
                   }}
                 >

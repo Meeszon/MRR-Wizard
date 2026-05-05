@@ -28,8 +28,8 @@ export default {
         label: ['11px', { lineHeight: '1.4', fontWeight: '700', letterSpacing: '1.5px' }],
       },
       borderRadius: {
-        btn: '0px',
-        card: '0px',
+        btn: '5px',
+        card: '8px',
       },
     },
   },

@@ -521,7 +521,7 @@ export default function EditMissionPage() {
                     <div
                       style={{
                         background: 'white',
-                        borderRadius: 0,
+                        borderRadius: '0 5px 5px 0',
                         border: '1px solid #E4E4E4',
                         borderLeft: 'none',
                         boxShadow: '2px 1px 6px rgba(0,0,0,0.07)',

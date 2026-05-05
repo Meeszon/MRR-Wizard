@@ -58,7 +58,10 @@ const MOCK_FLIGHTS = [
 function LangToggle() {
   const [lang, setLang] = useState('EN')
   return (
-    <div className="flex items-center" style={{ background: '#F4F5F8', padding: 2, gap: 2 }}>
+    <div
+      className="flex items-center rounded-btn"
+      style={{ background: '#F4F5F8', padding: 2, gap: 2 }}
+    >
       {['EN', 'NL'].map((l) => {
         const active = lang === l
         return (
@@ -66,7 +69,7 @@ function LangToggle() {
             key={l}
             type="button"
             onClick={() => setLang(l)}
-            className="transition-colors"
+            className="rounded-btn transition-colors"
             style={{
               padding: '3px 9px',
               fontSize: 11,
@@ -87,7 +90,10 @@ function LangToggle() {
 function StatusPill() {
   return (
     <div className="flex items-center gap-2">
-      <div className="flex items-center gap-1.5 px-2.5 py-1" style={{ background: '#F4F5F8' }}>
+      <div
+        className="flex items-center gap-1.5 px-2.5 py-1 rounded-btn"
+        style={{ background: '#F4F5F8' }}
+      >
         <div
           className={DRONE_CONNECTED ? 'pulse-soft' : ''}
           style={{
@@ -104,7 +110,10 @@ function StatusPill() {
         </span>
       </div>
       {DRONE_CONNECTED && (
-        <div className="flex items-center gap-1.5 px-2.5 py-1" style={{ background: '#F4F5F8' }}>
+        <div
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded-btn"
+          style={{ background: '#F4F5F8' }}
+        >
           <svg width="22" height="11" viewBox="0 0 22 11" fill="none">
             <rect x="0.5" y="0.5" width="18" height="10" rx="2" stroke="#B8B8B8" />
             <rect x="19.5" y="3" width="2" height="5" rx="1" fill="#B8B8B8" />
@@ -398,9 +407,7 @@ export default function HomePage() {
                   className="relative flex items-center justify-center rounded-btn flex-shrink-0"
                   style={{ width: '38px', height: '38px', background: 'rgba(255,255,255,0.18)' }}
                 >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
-                    <polygon points="5 3 19 12 5 21 5 3" />
-                  </svg>
+                  <Play size={16} fill="white" color="white" />
                 </div>
                 <div
                   className="relative text-left flex-1 min-w-0"

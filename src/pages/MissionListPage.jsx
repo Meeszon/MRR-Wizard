@@ -93,7 +93,7 @@ export default function MissionListPage() {
                             color: '#E0515F',
                             background: 'rgba(224,81,95,0.1)',
                             border: '1px solid rgba(224,81,95,0.25)',
-                            borderRadius: '4px',
+                            borderRadius: '5px',
                             padding: '1px 5px',
                           }}
                         >
