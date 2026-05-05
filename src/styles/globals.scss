@@ -41,6 +41,17 @@ body {
   position: relative;
 }
 
+/* Desktop: let the app fill the full viewport */
+@media (min-width: 1024px) {
+  body {
+    display: block;
+  }
+
+  #root {
+    max-width: none;
+  }
+}
+
 button {
   -webkit-user-select: none;
   user-select: none;
@@ -99,6 +110,32 @@ input[type='range']::-moz-range-thumb {
 }
 .pulse-soft {
   animation: pulse-soft 2.2s ease-in-out infinite;
+}
+
+/* Nav item — bottom border active indicator */
+.nav-item {
+  position: relative;
+}
+.nav-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #3d5af2;
+  border-radius: 2px 2px 0 0;
+}
+
+/* Card hover lift */
+.hover-lift {
+  transition: transform 0.15s ease;
+}
+.hover-lift:not(:active):hover {
+  transform: translateY(-1px);
+}
+.hover-lift:active {
+  transform: scale(0.99);
 }
 
 /* Hide Mapbox branding — matches new-dashboard-frontend/Map.scss */
