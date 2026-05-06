@@ -24,11 +24,11 @@ export default function App() {
                   <Route path="/" element={<HomePage />} />
                   <Route path="/missions" element={<MissionListPage />} />
                   <Route path="/flightlog" element={<FlightLogPage />} />
+                  <Route path="/start-flight" element={<StartFlightPage />} />
                 </Route>
                 <Route path="/wizard/step1" element={<EditMissionPage />} />
                 <Route path="/wizard/ready" element={<Step4Ready />} />
                 <Route path="/missions/edit" element={<EditMissionPage />} />
-                <Route path="/start-flight" element={<StartFlightPage />} />
                 <Route path="/manual-flight" element={<ManualFlightPage />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>

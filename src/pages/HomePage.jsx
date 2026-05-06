@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { motion, LayoutGroup } from 'framer-motion'
 import {
   Plus,
   FolderOpen,
@@ -58,32 +59,46 @@ const MOCK_FLIGHTS = [
 function LangToggle() {
   const [lang, setLang] = useState('EN')
   return (
-    <div
-      className="flex items-center rounded-btn"
-      style={{ background: '#F4F5F8', padding: 2, gap: 2 }}
-    >
-      {['EN', 'NL'].map((l) => {
-        const active = lang === l
-        return (
-          <button
-            key={l}
-            type="button"
-            onClick={() => setLang(l)}
-            className="rounded-btn transition-colors"
-            style={{
-              padding: '3px 9px',
-              fontSize: 11,
-              fontWeight: 700,
-              letterSpacing: '0.04em',
-              color: active ? '#fff' : '#5A5A5A',
-              background: active ? BLUE : 'transparent',
-            }}
-          >
-            {l}
-          </button>
-        )
-      })}
-    </div>
+    <LayoutGroup>
+      <div
+        className="flex items-center rounded-btn"
+        style={{ background: '#F4F5F8', padding: 2, gap: 2 }}
+      >
+        {['EN', 'NL'].map((l) => {
+          const active = lang === l
+          return (
+            <button
+              key={l}
+              type="button"
+              onClick={() => setLang(l)}
+              className="relative rounded-btn"
+              style={{
+                padding: '3px 9px',
+                fontSize: 11,
+                fontWeight: 700,
+                letterSpacing: '0.04em',
+              }}
+            >
+              {active && (
+                <motion.div
+                  layoutId="lang-pill"
+                  className="absolute inset-0 rounded-btn"
+                  style={{ background: BLUE }}
+                  transition={{ type: 'spring', stiffness: 500, damping: 38 }}
+                />
+              )}
+              <motion.span
+                className="relative z-10"
+                animate={{ color: active ? '#ffffff' : '#5A5A5A' }}
+                transition={{ type: 'spring', stiffness: 500, damping: 38 }}
+              >
+                {l}
+              </motion.span>
+            </button>
+          )
+        })}
+      </div>
+    </LayoutGroup>
   )
 }
 
