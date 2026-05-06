@@ -16,6 +16,10 @@ export function MissionsProvider({ children }) {
     setMissions((prev) => prev.map((m) => (m.id === id ? { ...m, ...updates } : m)))
   }
 
+  function deleteMission(id) {
+    setMissions((prev) => prev.filter((m) => m.id !== id))
+  }
+
   const value = useMemo(
     () => ({
       missions,
@@ -24,6 +28,7 @@ export function MissionsProvider({ children }) {
       setLastMissionName,
       addMission,
       updateMission,
+      deleteMission,
     }),
     [missions, completedMissions, lastMissionName],
   )

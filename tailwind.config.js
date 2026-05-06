@@ -29,7 +29,7 @@ export default {
       },
       borderRadius: {
         btn: '5px',
-        card: '10px',
+        card: '8px',
       },
     },
   },
