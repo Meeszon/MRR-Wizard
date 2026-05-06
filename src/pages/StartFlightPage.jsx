@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { Clock, Battery, Info, ChevronUp, Settings, Play, MapPin } from 'lucide-react'
+import { Clock, Battery, Info, ChevronUp, Settings, Play, MapPin, Plus } from 'lucide-react'
 import MissionMap from '../components/MissionMap'
 import PageHeader from '../components/PageHeader'
 import useMissions from '../hooks/useMissions'
@@ -10,6 +10,29 @@ import mockDrones from '../data/mockDrones'
 
 const connectedDrones = mockDrones.filter((d) => d.connected)
 const isSingleDrone = connectedDrones.length === 1
+
+function NewMissionButton({ onClick }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="w-full flex items-center justify-center gap-1.5 rounded-card active:scale-[0.98] hover:bg-[#F8F9FF] hover:border-[rgba(61,90,242,0.4)] transition-colors"
+      style={{
+        marginTop: 6,
+        padding: '10px',
+        border: '1.5px dashed #D8D8D8',
+        background: 'white',
+        fontSize: 12.5,
+        fontWeight: 600,
+        color: '#B0B0B0',
+        cursor: 'pointer',
+      }}
+    >
+      <Plus size={13} strokeWidth={2.5} />
+      New Mission
+    </button>
+  )
+}
 
 function SectionLabel({ children }) {
   return (
@@ -32,7 +55,7 @@ export default function StartFlightPage() {
   const navigate = useNavigate()
   const location = useLocation()
   const { missions, setLastMissionName } = useMissions()
-  const { startEditWizard } = useWizard()
+  const { startEditWizard, startNewWizard } = useWizard()
   const mobileScrollRef = useRef(null)
   const missionRefs = useRef({})
 
@@ -49,6 +72,11 @@ export default function StartFlightPage() {
   const selectedMission = missions.find((m) => m.id === selectedMissionId) ?? null
   const selectedDrone = mockDrones.find((d) => d.id === selectedDroneId) ?? null
   const canStart = selectedMissionId !== null && selectedDroneId !== null
+
+  function handleNewMission() {
+    startNewWizard()
+    navigate('/wizard/step1')
+  }
 
   function handleEditMission(mission) {
     startEditWizard(mission)
@@ -355,6 +383,7 @@ export default function StartFlightPage() {
                   )
                 })}
               </div>
+              <NewMissionButton onClick={() => handleNewMission()} />
             </div>
           </div>
         </div>
@@ -519,6 +548,7 @@ export default function StartFlightPage() {
                   )
                 })}
               </div>
+              <NewMissionButton onClick={() => handleNewMission()} />
             </div>
           </div>
 

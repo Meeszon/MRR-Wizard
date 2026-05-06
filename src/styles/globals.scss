@@ -97,6 +97,8 @@ input[type='range']::-moz-range-thumb {
     linear-gradient(rgba(61, 90, 242, 0.07) 1px, transparent 1px),
     linear-gradient(90deg, rgba(61, 90, 242, 0.07) 1px, transparent 1px);
   background-size: 44px 44px;
+  background-position: center center;
+  background-attachment: fixed;
 }
 
 @keyframes pulse-soft {
@@ -152,4 +154,45 @@ input[type='range']::-moz-range-thumb {
 /* Mapbox canvas is inline by default; block removes the ~4px descender gap */
 .mapboxgl-canvas {
   display: block;
+}
+
+/* ── Custom scrollbar ── */
+
+/* Reserve gutter space before scrollbar appears — prevents content shift */
+.overflow-y-auto,
+.overflow-y-scroll {
+  scrollbar-gutter: stable;
+}
+
+/* Webkit (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(61, 90, 242, 0.4);
+  border-radius: 4px;
+
+  &:hover {
+    background: rgba(61, 90, 242, 0.6);
+  }
+
+  &:active {
+    background: rgba(61, 90, 242, 0.75);
+  }
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(61, 90, 242, 0.4) transparent;
 }

@@ -9,8 +9,9 @@ import {
   Joystick,
   ArrowRight,
   Play,
-  X,
   ChevronRight,
+  CheckCircle2,
+  XCircle,
 } from 'lucide-react'
 import logo from '../assets/logo.png'
 import useMissions from '../hooks/useMissions'
@@ -284,22 +285,11 @@ function FlightRow({ flight }) {
       style={{ gridTemplateColumns: 'minmax(0,1fr) 130px 90px 90px 28px' }}
     >
       <div className="flex items-center gap-2.5 min-w-0">
-        <div
-          style={{
-            width: 30,
-            height: 30,
-            background: aborted ? 'rgba(224,81,95,0.10)' : 'rgba(61,90,242,0.10)',
-            display: 'grid',
-            placeItems: 'center',
-            flexShrink: 0,
-          }}
-        >
-          {aborted ? (
-            <X size={13} color={RED} strokeWidth={2.25} />
-          ) : (
-            <Play size={11} fill={BLUE} color={BLUE} />
-          )}
-        </div>
+        {aborted ? (
+          <XCircle size={20} color={RED} strokeWidth={1.75} className="flex-shrink-0" />
+        ) : (
+          <CheckCircle2 size={20} color="#16A34A" strokeWidth={1.75} className="flex-shrink-0" />
+        )}
         <div className="flex flex-col min-w-0">
           <span className="font-semibold text-title truncate" style={{ fontSize: 13.5 }}>
             {flight.missionName}
